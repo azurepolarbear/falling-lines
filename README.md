@@ -1,4 +1,4 @@
-# @batpb/genart template
+# falling lines
 
 Copyright (C) 2024-2025 brittni and the polar bear LLC.
 
