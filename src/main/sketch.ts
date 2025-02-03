@@ -27,20 +27,63 @@ import '../../assets/styles/sketch.css';
 
 import {
     ASPECT_RATIOS,
+    BRITTNI_PALETTE,
     CanvasContext,
+    CanvasScreen, ColorSelector,
     P5Context,
+    PaletteColorSelector, Random,
     ScreenHandler
 } from '@batpb/genart';
 
-import { SketchScreen } from './sketch-screen';
+import { HexColorSelector } from './color';
+import { LineThickness } from './line-categories';
+import { FallingLines, LinesConfig } from './falling-lines';
+
+interface Palette {
+    name: string;
+    colors: string[];
+}
 
 function sketch(p5: P5Lib): void {
+    function buildPalettes(): Palette[] {
+        return [
+            { name: 'winter blues', colors: ['#dfebf1', '#a4c0df', '#7a9ec7', '#3e6589', '#052542'] },
+            { name: 'winter calm', colors: ['#badaee', '#8cc2e3', '#61879e', '#b7bee1', '#dedede'] },
+            { name: 'dark winter', colors: ['#e3d4ed', '#c9c1cd', '#baaac5', '#8f81a7', '#775a90'] },
+            { name: 'mindful palette no. 104', colors: ['#f7f4e9', '#ebdbc1', '#7d8778', '#74583e', '#5e4662', '#131210'] },
+            { name: 'winter pine forest', colors: ['#2a314b', '#415676', '#637ea1', '#89aacd', '#b7d9f5'] },
+            { name: 'winter sunrise', colors: ['#9994d6', '#9fade0', '#aec4ea', '#b9daee', '#c7ecf0'] },
+            { name: 'persephone in winter', colors: ['#1c101e', '#3f0d2a', '#610a34', '#930643', '#e8025e'] },
+            { name: 'forest frost', colors: ['#6a907f', '#a2c3b1', '#cee4df', '#ebf4f4', '#f5fff7'] },
+            { name: 'winter pine', colors: ['#cad3c5', '#84a98c', '#537970', '#344d50', '#2f3e46'] }
+        ];
+    }
+
     p5.setup = (): void => {
         P5Context.initialize(p5);
         CanvasContext.buildCanvas(ASPECT_RATIOS.SQUARE, 720, p5.P2D, true);
-        const screen: SketchScreen = new SketchScreen();
-        ScreenHandler.addScreen(screen);
-        ScreenHandler.currentScreen = screen.NAME;
+        const palettes: Palette[] = buildPalettes();
+        const palette: Palette | undefined = Random.randomElement(palettes);
+        let selector: ColorSelector;
+
+        if (palette) {
+            selector = new HexColorSelector(true, palette.colors);
+        } else {
+            selector = new PaletteColorSelector(BRITTNI_PALETTE);
+        }
+
+        const thickness: LineThickness = Random.randomElement([LineThickness.THIN, LineThickness.MEDIUM, LineThickness.THICK]) ?? LineThickness.THIN;
+
+        const config: LinesConfig = {
+            NAME: 'Falling Lines',
+            THICKNESS_CATEGORY: thickness,
+            SAME_THICKNESS: Random.randomBoolean(),
+            COLOR_SELECTOR: selector
+        };
+
+        const fallingLines: CanvasScreen = new FallingLines(config);
+        ScreenHandler.addScreen(fallingLines);
+        ScreenHandler.currentScreen = fallingLines.NAME;
     };
 
     p5.draw = (): void => {

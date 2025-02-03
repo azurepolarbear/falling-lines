@@ -40,7 +40,7 @@ export class FallingLines extends CanvasScreen {
     #maxLineLengthRatio: number = 1;
     #lineTotal: number = 2;
 
-    protected constructor(config: LinesConfig) {
+    public constructor(config: LinesConfig) {
         super(config.NAME);
         this.#THICKNESS_CATEGORY = config.THICKNESS_CATEGORY;
         this.#SAME_THICKNESS = config.SAME_THICKNESS;
