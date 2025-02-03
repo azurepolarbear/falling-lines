@@ -1,3 +1,4 @@
+// TODO - implement LineDensity categories
 export enum LineDensity {
     LOW = 'low',
     MEDIUM = 'medium',
@@ -41,5 +42,61 @@ export enum LineFill {
     /**
      * Lines are built at random distances from each other and do not overlap.
      */
-    RANDOM_NO_OVERLAP = 'random-no-overlap'
+    RANDOM_NO_OVERLAP = 'random-no-overlap',
+
+    // TODO - implement CLUSTERS category
+    CLUSTERS = 'clusters'
+}
+
+// TODO - implement LineTransparency categories
+export enum LineTransparency {
+    SOLID = 'solid',
+    LOW_TRANSPARENCY = 'low-transparency',
+    MEDIUM_TRANSPARENCY = 'medium-transparency',
+    HIGH_TRANSPARENCY = 'high-transparency'
+}
+
+export enum LineGradient {
+    SOLID = 'solid',
+    WINDOW_GRADIENT = 'window-gradient',
+    LINE_LENGTH_GRADIENT = 'line-length-gradient',
+    MAX_LENGTH_GRADIENT = 'max-length-gradient'
+}
+
+export enum ColorLayout {
+    /**
+     * All lines have the same color.
+     */
+    SAME_COLOR = 'same-color',
+
+    /**
+     * All lines have the same gradient.
+     */
+    SAME_GRADIENT = 'same-gradient',
+
+    /**
+     * Gradient is built from one side of the window to the other.
+     */
+    WINDOW_GRADIENT = 'window-gradient',
+}
+
+export enum LineLength {
+    SHORT = 'short',
+    MEDIUM = 'medium',
+    LONG = 'long',
+    FULL_SCREEN = 'full-screen'
+}
+
+export enum LineTrend {
+    CONSTANT = 'constant',
+    INCREASE_TO_LEFT = 'increase-to-left',
+    INCREASE_TO_RIGHT = 'increase-to-right',
+}
+
+export enum LineAlignment {
+    TOP = 'top',
+    BOTTOM = 'bottom',
+    MIDDLE = 'middle',
+    PATH = 'path',
+    MIXED = 'mixed'
 }
