@@ -11,6 +11,7 @@ export enum LineThickness {
 }
 
 export enum LineFill {
+    // TODO - implement FILL category
     /**
      * Lines are built to fill in the canvas without overlapping.
      */
@@ -21,16 +22,19 @@ export enum LineFill {
      */
     EVEN_OVERLAP = 'even-overlap',
 
+    // TODO - implement RANDOM_OVERLAP category
     /**
      * Lines are built at random distances from each other and can overlap.
      */
     RANDOM_OVERLAP = 'random-overlap',
 
+    // TODO - implement EVEN_NO_OVERLAP category
     /**
      * Lines are built equidistant from each other and do not overlap.
      */
     EVEN_NO_OVERLAP = 'even-no-overlap',
 
+    // TODO - implement RANDOM_NO_OVERLAP category
     /**
      * Lines are built at random distances from each other and do not overlap.
      */
