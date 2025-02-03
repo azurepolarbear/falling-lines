@@ -27,7 +27,7 @@ export interface LinesConfig {
 
 export class FallingLines extends CanvasScreen {
     static #LINE_DENSITY_SELECTOR: CategorySelector<LineDensity> = new CategorySelector<LineDensity>([
-        { category: LineDensity.LOW, range: new Range(5, 15) },
+        { category: LineDensity.LOW, range: new Range(5, 15) }
     ], false);
 
     readonly #LINES: Line[] = [];
