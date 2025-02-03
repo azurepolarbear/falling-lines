@@ -1,7 +1,7 @@
 {
-  "name": "genart-template",
-  "version": "3.1.0",
-  "description": "a template for new generative art projects using the @batpb/genart library.",
+  "name": "falling-lines",
+  "version": "0.0.1",
+  "description": "the falling lines algorithmic art project.",
   "private": true,
   "scripts": {
     "build:dev": "webpack --mode development",
@@ -14,38 +14,32 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brittni-and-the-polar-bear/genart-template.git"
+    "url": "git+https://github.com/azurepolarbear/falling-lines.git"
   },
   "keywords": [
+    "art",
     "algorithmic art",
     "code art",
-    "generative art",
+    "creative coding",
     "p5",
     "p5.js",
     "p5js",
     "p5-js",
     "typescript",
-    "template"
+    "abstract",
+    "geometric",
+    "lines",
+    "vertical lines"
   ],
   "author": {
-    "name": "brittni and the polar bear",
-    "url": "https://linktr.ee/brittniandthepolarbear"
+    "name": "azurepolarbear",
+    "url": "https://linktr.ee/azurepolarbear"
   },
-  "contributors": [
-    {
-      "name": "brittni watkins",
-      "url": "https://linktr.ee/brittniwatkins"
-    },
-    {
-      "name": "azurepolarbear",
-      "url": "https://linktr.ee/azurepolarbear"
-    }
-  ],
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/brittni-and-the-polar-bear/genart-template/issues"
+    "url": "https://github.com/azurepolarbear/falling-lines/issues"
   },
-  "homepage": "https://github.com/brittni-and-the-polar-bear/genart-template#readme",
+  "homepage": "https://github.com/azurepolarbear/falling-lines#readme",
   "dependencies": {
     "@batpb/genart": "^2.0.0-rc2",
     "p5": "^1.11.3"
