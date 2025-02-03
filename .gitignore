@@ -8,3 +8,4 @@ out/
 
 # WebStorm and JetBrains IDEs
 .idea/
+*.DS_Store
