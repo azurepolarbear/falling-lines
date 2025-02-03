@@ -31,13 +31,15 @@ import {
     CanvasContext,
     CanvasScreen, ColorSelector,
     P5Context,
-    PaletteColorSelector, Random,
+    PaletteColorSelector,
+    Random,
     ScreenHandler
 } from '@batpb/genart';
 
 import { HexColorSelector } from './color';
-import { LineThickness } from './line-categories';
+import { LineFill, LineThickness } from './line-categories';
 import { FallingLines, LinesConfig } from './falling-lines';
+// import { CategorySelector } from './selector';
 
 interface Palette {
     name: string;
@@ -45,6 +47,10 @@ interface Palette {
 }
 
 function sketch(p5: P5Lib): void {
+    // const LINE_DENSITY_SELECTOR: CategorySelector<LineDensity> = new CategorySelector<LineDensity>([
+    //     { category: LineDensity.LOW, range: new Range(5, 15) }
+    // ], false);
+
     function buildPalettes(): Palette[] {
         return [
             { name: 'winter blues', colors: ['#dfebf1', '#a4c0df', '#7a9ec7', '#3e6589', '#052542'] },
@@ -72,13 +78,19 @@ function sketch(p5: P5Lib): void {
             selector = new PaletteColorSelector(BRITTNI_PALETTE);
         }
 
-        const thickness: LineThickness = Random.randomElement([LineThickness.THIN, LineThickness.MEDIUM, LineThickness.THICK]) ?? LineThickness.THIN;
+        selector = new HexColorSelector(false, ['#FF0000']);
+
+        // const thickness: LineThickness = Random.randomElement([LineThickness.THIN, LineThickness.MEDIUM, LineThickness.THICK]) ?? LineThickness.THIN;
 
         const config: LinesConfig = {
             NAME: 'Falling Lines',
-            THICKNESS_CATEGORY: thickness,
-            SAME_THICKNESS: Random.randomBoolean(),
-            COLOR_SELECTOR: selector
+            LINE_TOTAL: 5,
+            COLOR_SELECTOR: selector,
+
+            LINE_FILL_CATEGORY: LineFill.EVEN_OVERLAP,
+
+            THICKNESS_CATEGORY: LineThickness.THIN,
+            SAME_THICKNESS: false
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);

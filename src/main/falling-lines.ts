@@ -7,68 +7,68 @@ import {
     Color,
     ColorSelector,
     Coordinate,
-    CoordinateMapper,
     CoordinateMode,
     P5Context,
     Random,
     Range } from '@batpb/genart';
 
 import { Line } from './line';
-import { LineDensity, LineThickness } from './line-categories';
+import { LineFill, LineThickness } from './line-categories';
 import { CategorySelector } from './selector';
 
 export interface LinesConfig {
     readonly NAME: string;
-    readonly THICKNESS_CATEGORY: LineThickness;
-    readonly SAME_THICKNESS: boolean;
+    readonly LINE_TOTAL: number;
     readonly COLOR_SELECTOR: ColorSelector;
-    readonly LINE_DENSITY?: LineDensity;
+
+    readonly LINE_FILL_CATEGORY: LineFill;
+
+    readonly THICKNESS_CATEGORY?: LineThickness;
+    readonly SAME_THICKNESS?: boolean;
 }
 
 export class FallingLines extends CanvasScreen {
-    static #LINE_DENSITY_SELECTOR: CategorySelector<LineDensity> = new CategorySelector<LineDensity>([
-        { category: LineDensity.LOW, range: new Range(5, 15) }
+    static #LINE_THICKNESS_SELECTOR: CategorySelector<LineThickness> = new CategorySelector<LineThickness>([
+        { category: LineThickness.THIN, range: new Range(0.5, 2) },
+        { category: LineThickness.MEDIUM, range: new Range(2, 10) },
+        { category: LineThickness.THICK, range: new Range(10, 30) }
     ], false);
 
     readonly #LINES: Line[] = [];
-    readonly #THICKNESS_CATEGORY: LineThickness;
-    readonly #SAME_THICKNESS: boolean;
     readonly #COLOR_SELECTOR: ColorSelector;
 
-    #thickness: number | undefined = undefined;
-    #minLineLengthRatio: number = 0.05;
-    #maxLineLengthRatio: number = 1;
     #lineTotal: number = 2;
 
     public constructor(config: LinesConfig) {
         super(config.NAME);
-        this.#THICKNESS_CATEGORY = config.THICKNESS_CATEGORY;
-        this.#SAME_THICKNESS = config.SAME_THICKNESS;
         this.#COLOR_SELECTOR = config.COLOR_SELECTOR;
+        this.#lineTotal = config.LINE_TOTAL;
 
-        if (config.LINE_DENSITY) {
-            FallingLines.#LINE_DENSITY_SELECTOR.currentCategory = config.LINE_DENSITY;
+        if (config.THICKNESS_CATEGORY) {
+            FallingLines.#LINE_THICKNESS_SELECTOR.currentCategory = config.THICKNESS_CATEGORY;
         } else {
-            FallingLines.#LINE_DENSITY_SELECTOR.setRandomCategory();
+            FallingLines.#LINE_THICKNESS_SELECTOR.setRandomCategory();
         }
 
-        this.#buildLines();
+        if (typeof config.SAME_THICKNESS === 'boolean') {
+            FallingLines.#LINE_THICKNESS_SELECTOR.sameChoice = config.SAME_THICKNESS;
+        } else {
+            FallingLines.#LINE_THICKNESS_SELECTOR.sameChoice = Random.randomBoolean();
+        }
+
+        this.#build(config.LINE_FILL_CATEGORY);
     }
 
-    protected get colorSelector(): ColorSelector {
-        return this.#COLOR_SELECTOR;
+    public static get MIN_LENGTH_RATIO(): number {
+        return 0.02;
     }
 
-    protected get lineTotal(): number {
+    public static get MAX_LENGTH_RATIO(): number {
+        return 1.0;
+    }
+
+    public get lineTotal(): number {
         return this.#lineTotal;
-    }
-
-    protected get minLineLengthRatio(): number {
-        return this.#minLineLengthRatio;
-    }
-
-    protected get maxLineLengthRatio(): number {
-        return this.#maxLineLengthRatio;
     }
 
     public override draw(): void {
@@ -119,18 +119,27 @@ export class FallingLines extends CanvasScreen {
         console.log('saveSet() placeholder');
     }
 
-    #buildLines(): void {
+    #build(fill: LineFill): void {
+        switch (fill) {
+            case LineFill.EVEN_OVERLAP:
+                this.#buildEvenOverlapLines();
+                break;
+            default:
+                break;
+        }
+    }
+
+    #buildEvenOverlapLines(): void {
         const p5: P5Lib = P5Context.p5;
         const canvasWidth: number = p5.width;
         const canvasHeight: number = p5.height;
-        const minLineLength: number = canvasHeight * this.minLineLengthRatio;
-        const maxLineLength: number = canvasHeight * this.maxLineLengthRatio;
-        const spaceX: number = canvasWidth / this.lineTotal;
-        let startX: number = Random.randomFloat(0, spaceX);
+        const minLineLength: number = canvasHeight * FallingLines.MIN_LENGTH_RATIO;
+        const maxLineLength: number = canvasHeight * FallingLines.MAX_LENGTH_RATIO;
+        const spaceX: number = canvasWidth / (this.lineTotal + 1);
 
-        while (startX < CoordinateMapper.maxX) {
+        for (let i = 0; i < this.lineTotal; i++) {
+            const x: number = (i + 1) * spaceX;
             const startY: number = 0;
-            const endX: number = startX;
             const possibleLength: number = maxLineLength;
 
             // if (this.#maxLength === MaxLength.RIGHT) {
@@ -142,44 +151,50 @@ export class FallingLines extends CanvasScreen {
             // }
 
             const endY: number = Random.randomFloat(minLineLength, possibleLength);
-            const color: Color = this.colorSelector.getColor();
             const start: Coordinate = new Coordinate();
-            start.setPosition(new P5Lib.Vector(startX, startY), CoordinateMode.CANVAS);
+            start.setPosition(new P5Lib.Vector(x, startY), CoordinateMode.CANVAS);
             const end: Coordinate = new Coordinate();
-            end.setPosition(new P5Lib.Vector(endX, endY), CoordinateMode.CANVAS);
-            this.#addLine(new Line(start, end, color, this.#getThickness()));
-            startX += Random.randomFloat(spaceX * 0.25, spaceX * 1.25);
+            end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
+            const color: Color = this.#COLOR_SELECTOR.getColor();
+            const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
+            this.#addLine(new Line(start, end, color, thickness));
         }
     }
+
+    // #buildLines(): void {
+    //     const p5: P5Lib = P5Context.p5;
+    //     const canvasWidth: number = p5.width;
+    //     const canvasHeight: number = p5.height;
+    //     const minLineLength: number = canvasHeight * this.minLineLengthRatio;
+    //     const maxLineLength: number = canvasHeight * this.maxLineLengthRatio;
+    //     const spaceX: number = canvasWidth / this.lineTotal;
+    //     let startX: number = Random.randomFloat(0, spaceX);
+
+    //     while (startX < CoordinateMapper.maxX) {
+    //         const startY: number = 0;
+    //         const endX: number = startX;
+    //         const possibleLength: number = maxLineLength;
+
+    //         // if (this.#maxLength === MaxLength.RIGHT) {
+    //         //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, minLineLength, maxLineLength);
+    //         // } else if (this.#maxLength === MaxLength.LEFT) {
+    //         //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, maxLineLength, minLineLength);
+    //         // } else {
+    //         //     possibleLength = maxLineLength;
+    //         // }
+
+    //         const endY: number = Random.randomFloat(minLineLength, possibleLength);
+    //         const color: Color = this.colorSelector.getColor();
+    //         const start: Coordinate = new Coordinate();
+    //         start.setPosition(new P5Lib.Vector(startX, startY), CoordinateMode.CANVAS);
+    //         const end: Coordinate = new Coordinate();
+    //         end.setPosition(new P5Lib.Vector(endX, endY), CoordinateMode.CANVAS);
+    //         this.#addLine(new Line(start, end, color, this.#getThickness()));
+    //         startX += Random.randomFloat(spaceX * 0.25, spaceX * 1.25);
+    //     }
+    // }
 
     #addLine(line: Line): void {
         this.#LINES.push(line);
-    }
-
-    #getThickness(): number {
-        let result: number;
-
-        if (this.#SAME_THICKNESS) {
-            if (!this.#thickness) {
-                this.#thickness = this.#calculateThickness();
-            }
-
-            result = this.#thickness;
-        } else {
-            result = this.#calculateThickness();
-        }
-
-        return result;
-    }
-
-    #calculateThickness(): number {
-        switch (this.#THICKNESS_CATEGORY) {
-            case LineThickness.THIN:
-                return Random.randomFloat(0.5, 2);
-            case LineThickness.MEDIUM:
-                return Random.randomFloat(2, 10);
-            case LineThickness.THICK:
-                return Random.randomFloat(10, 30);
-        }
     }
 }
