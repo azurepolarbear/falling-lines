@@ -26,7 +26,6 @@ export enum LineFill {
      */
     EVEN_OVERLAP = 'even-overlap',
 
-    // TODO - implement RANDOM_OVERLAP category
     /**
      * Lines are built at random distances from each other and can overlap.
      */
@@ -84,7 +83,8 @@ export enum LineLength {
     SHORT = 'short',
     MEDIUM = 'medium',
     LONG = 'long',
-    FULL_SCREEN = 'full-screen'
+    FULL_SCREEN = 'full-screen',
+    FULL_SCREEN_ONLY = 'full-screen-only'
 }
 
 export enum LineTrend {

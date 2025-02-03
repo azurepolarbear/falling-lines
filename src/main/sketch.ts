@@ -85,7 +85,7 @@ function sketch(p5: P5Lib): void {
             LINE_TOTAL: 25,
             COLOR_SELECTOR: selector,
 
-            LINE_FILL_CATEGORY: LineFill.EVEN_OVERLAP
+            LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);

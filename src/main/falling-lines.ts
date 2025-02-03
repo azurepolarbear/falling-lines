@@ -7,6 +7,7 @@ import {
     Color,
     ColorSelector,
     Coordinate,
+    CoordinateMapper,
     CoordinateMode,
     P5Context,
     Random,
@@ -127,6 +128,9 @@ export class FallingLines extends CanvasScreen {
             case LineFill.EVEN_OVERLAP:
                 this.#buildEvenOverlapLines();
                 break;
+            case LineFill.RANDOM_OVERLAP:
+                this.#buildRandomOverlapLines();
+                break;
             default:
                 break;
         }
@@ -154,14 +158,59 @@ export class FallingLines extends CanvasScreen {
             // }
 
             const endY: number = Random.randomFloat(minLineLength, possibleLength);
+
             const start: Coordinate = new Coordinate();
             start.setPosition(new P5Lib.Vector(x, startY), CoordinateMode.CANVAS);
+
             const end: Coordinate = new Coordinate();
             end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
+
             const color: Color = this.#COLOR_SELECTOR.getColor();
             const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
             this.#addLine(new Line(start, end, color, thickness));
         }
+    }
+
+    #buildRandomOverlapLines(): void {
+        const p5: P5Lib = P5Context.p5;
+        const canvasWidth: number = p5.width;
+        const canvasHeight: number = p5.height;
+        const minLineLength: number = canvasHeight * FallingLines.MIN_LENGTH_RATIO;
+        const maxLineLength: number = canvasHeight * FallingLines.MAX_LENGTH_RATIO;
+        const spaceX: number = canvasWidth / (this.lineTotal + 1);
+        let startX: number = Random.randomFloat(0, spaceX);
+        let total: number = 0;
+
+        while (startX < CoordinateMapper.maxX) {
+            const startY: number = 0;
+            const endX: number = startX;
+            const possibleLength: number = maxLineLength;
+        
+            // if (this.#maxLength === MaxLength.RIGHT) {
+            //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, minLineLength, maxLineLength);
+            // } else if (this.#maxLength === MaxLength.LEFT) {
+            //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, maxLineLength, minLineLength);
+            // } else {
+            //     possibleLength = maxLineLength;
+            // }
+        
+            const endY: number = Random.randomFloat(minLineLength, possibleLength);
+
+            const start: Coordinate = new Coordinate();
+            start.setPosition(new P5Lib.Vector(startX, startY), CoordinateMode.CANVAS);
+
+            const end: Coordinate = new Coordinate();
+            end.setPosition(new P5Lib.Vector(endX, endY), CoordinateMode.CANVAS);
+
+            const color: Color = this.#COLOR_SELECTOR.getColor();
+            const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
+            this.#addLine(new Line(start, end, color, thickness));
+
+            startX += Random.randomFloat(spaceX * 0.1, spaceX * 1.5);
+            total++;
+        }
+
+        this.#lineTotal = total;
     }
 
     // #buildLines(): void {
