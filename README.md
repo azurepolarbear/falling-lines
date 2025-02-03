@@ -1,8 +1,11 @@
 # @batpb/genart template
 
-Copyright (C) 2023-2024 brittni and the polar bear LLC.
+Copyright (C) 2024-2025 brittni and the polar bear LLC.
 
-A template for new generative art projects using the [@batpb/genart](https://www.npmjs.com/package/@batpb/genart) library.
+The falling lines algorithmic art project.
+
+This project uses the brittni and the polar bear generative art
+library: [@batpb/genart](https://www.npmjs.com/package/@batpb/genart).
 
 ----
 
@@ -42,14 +45,6 @@ A template for new generative art projects using the [@batpb/genart](https://www
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/azurepolarbear/falling-lines)
 
-----
-
-# attributions
-
-The favicon.ico of this template was designed by
-[Freepik from Flaticon](https://www.flaticon.com/free-icons/art).
-You can find the original icon on
-[flaticon.com](https://www.flaticon.com/free-icon/art_1756752?term=art&page=1&position=38&origin=search&related_id=1756752).
 
 ----
 
