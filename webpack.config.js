@@ -74,7 +74,7 @@ module.exports = {
         removeEmptyChunks: true,
         splitChunks: {
             chunks: 'all'
-        },
+        }
         // usedExports: true
     },
     output: {
