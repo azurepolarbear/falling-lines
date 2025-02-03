@@ -57,25 +57,25 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: '@batpb/genart template',
+            title: 'falling lines',
             inject: 'body',
             favicon: './assets/icon/favicon.ico'
         }),
         new MiniCssExtractPlugin()
     ],
     optimization: {
-        concatenateModules: true,
-        emitOnErrors: false,
-        mangleExports: true,
-        mergeDuplicateChunks: true,
-        minimize: true,
-        providedExports: true,
-        removeAvailableModules: true,
+        // concatenateModules: true,
+        // emitOnErrors: false,
+        // mangleExports: true,
+        // mergeDuplicateChunks: true,
+        // minimize: true,
+        // providedExports: true,
+        // removeAvailableModules: true,
         removeEmptyChunks: true,
         splitChunks: {
             chunks: 'all'
         },
-        usedExports: true
+        // usedExports: true
     },
     output: {
         path: path.resolve(__dirname, 'out/dist'),
