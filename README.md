@@ -2,7 +2,7 @@
 
 Copyright (C) 2024-2025 brittni and the polar bear LLC.
 
-The falling lines algorithmic art project.
+[azurepolarbear's](https://github.com/azurepolarbear) falling lines algorithmic art project.
 
 This project uses the brittni and the polar bear generative art
 library: [@batpb/genart](https://www.npmjs.com/package/@batpb/genart).
