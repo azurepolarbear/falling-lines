@@ -12,35 +12,35 @@ A template for new generative art projects using the [@batpb/genart](https://www
 
 ## actions
 
-[![CodeQL](https://github.com/brittni-and-the-polar-bear/genart-template/actions/workflows/codeql.yml/badge.svg)](https://github.com/brittni-and-the-polar-bear/genart-template/actions/workflows/codeql.yml)
-[![Node.js Build](https://github.com/brittni-and-the-polar-bear/genart-template/actions/workflows/node-js.yml/badge.svg)](https://github.com/brittni-and-the-polar-bear/genart-template/actions/workflows/node-js.yml)
+[![CodeQL](https://github.com/azurepolarbear/falling-lines/actions/workflows/codeql.yml/badge.svg)](https://github.com/azurepolarbear/falling-lines/actions/workflows/codeql.yml)
+[![Node.js Build](https://github.com/azurepolarbear/falling-lines/actions/workflows/node-js.yml/badge.svg)](https://github.com/azurepolarbear/falling-lines/actions/workflows/node-js.yml)
 
 ----
 
 ## project releases
 
-![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/brittni-and-the-polar-bear/genart-template)
-![GitHub License](https://img.shields.io/github/license/brittni-and-the-polar-bear/genart-template)
+![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/azurepolarbear/falling-lines)
+![GitHub License](https://img.shields.io/github/license/azurepolarbear/falling-lines)
 
 ----
 
 ## github
 
-![GitHub followers](https://img.shields.io/github/followers/brittni-and-the-polar-bear)
-![GitHub Repo stars](https://img.shields.io/github/stars/brittni-and-the-polar-bear/genart-template)
-![GitHub watchers](https://img.shields.io/github/watchers/brittni-and-the-polar-bear/genart-template)
+![GitHub followers](https://img.shields.io/github/followers/azurepolarbear)
+![GitHub Repo stars](https://img.shields.io/github/stars/azurepolarbear/falling-lines)
+![GitHub watchers](https://img.shields.io/github/watchers/azurepolarbear/falling-lines)
 
-![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/brittni-and-the-polar-bear/genart-template)
-![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/brittni-and-the-polar-bear/genart-template)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/azurepolarbear/falling-lines)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/azurepolarbear/falling-lines)
 
-![GitHub issues by-label (bug)](https://img.shields.io/github/issues/brittni-and-the-polar-bear/genart-template/bug?color=red)
-![GitHub issues by-label (security)](https://img.shields.io/github/issues/brittni-and-the-polar-bear/genart-template/security?color=red)
+![GitHub issues by-label (bug)](https://img.shields.io/github/issues/azurepolarbear/falling-lines/bug?color=red)
+![GitHub issues by-label (security)](https://img.shields.io/github/issues/azurepolarbear/falling-lines/security?color=red)
 
-![GitHub commits since latest release](https://img.shields.io/github/commits-since/brittni-and-the-polar-bear/genart-template/latest)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/azurepolarbear/falling-lines/latest)
 
-![GitHub contributors](https://img.shields.io/github/contributors-anon/brittni-and-the-polar-bear/genart-template)
+![GitHub contributors](https://img.shields.io/github/contributors-anon/azurepolarbear/falling-lines)
 
-![GitHub repo size](https://img.shields.io/github/repo-size/brittni-and-the-polar-bear/genart-template)
+![GitHub repo size](https://img.shields.io/github/repo-size/azurepolarbear/falling-lines)
 
 ----
 
