@@ -6,8 +6,11 @@ export enum LineDensity {
 
 export enum LineThickness {
     THIN = 'thin',
+    THIN_MEDIUM = 'thin-medium',
     MEDIUM = 'medium',
-    THICK = 'thick'
+    MEDIUM_THICK = 'medium-thick',
+    THICK = 'thick',
+    MIXED = 'mixed'
 }
 
 export enum LineFill {

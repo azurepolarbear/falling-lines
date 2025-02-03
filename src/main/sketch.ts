@@ -37,7 +37,7 @@ import {
 } from '@batpb/genart';
 
 import { HexColorSelector } from './color';
-import { LineFill, LineThickness } from './line-categories';
+import { LineFill } from './line-categories';
 import { FallingLines, LinesConfig } from './falling-lines';
 // import { CategorySelector } from './selector';
 
@@ -78,19 +78,14 @@ function sketch(p5: P5Lib): void {
             selector = new PaletteColorSelector(BRITTNI_PALETTE);
         }
 
-        selector = new HexColorSelector(false, ['#FF0000']);
-
-        // const thickness: LineThickness = Random.randomElement([LineThickness.THIN, LineThickness.MEDIUM, LineThickness.THICK]) ?? LineThickness.THIN;
+        selector = new HexColorSelector(false, ['#FF0000', '#FFFFFF']);
 
         const config: LinesConfig = {
             NAME: 'Falling Lines',
-            LINE_TOTAL: 5,
+            LINE_TOTAL: 25,
             COLOR_SELECTOR: selector,
 
-            LINE_FILL_CATEGORY: LineFill.EVEN_OVERLAP,
-
-            THICKNESS_CATEGORY: LineThickness.THIN,
-            SAME_THICKNESS: false
+            LINE_FILL_CATEGORY: LineFill.EVEN_OVERLAP
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);

@@ -29,9 +29,12 @@ export interface LinesConfig {
 
 export class FallingLines extends CanvasScreen {
     static #LINE_THICKNESS_SELECTOR: CategorySelector<LineThickness> = new CategorySelector<LineThickness>([
-        { category: LineThickness.THIN, range: new Range(0.5, 2) },
-        { category: LineThickness.MEDIUM, range: new Range(2, 10) },
-        { category: LineThickness.THICK, range: new Range(10, 30) }
+        { category: LineThickness.THIN, range: new Range(0.25, 5) },
+        { category: LineThickness.THIN_MEDIUM, range: new Range(0.25, 25) },
+        { category: LineThickness.MEDIUM, range: new Range(3, 25) },
+        { category: LineThickness.THICK, range: new Range(20, 50) },
+        { category: LineThickness.MEDIUM_THICK, range: new Range(3, 50) },
+        { category: LineThickness.MIXED, range: new Range(0.25, 50) }
     ], false);
 
     readonly #LINES: Line[] = [];
