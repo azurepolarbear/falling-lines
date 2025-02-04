@@ -38,7 +38,7 @@ import {
 } from '@batpb/genart';
 
 import { HexColorSelector } from './color';
-import { LineDensity, LineFill, LineLength } from './line-categories';
+import { LineDensity, LineFill } from './line-categories';
 import { FallingLines, LinesConfig } from './falling-lines';
 import { CategorySelector } from './selector';
 
@@ -53,7 +53,7 @@ function sketch(p5: P5Lib): void {
     const LINE_DENSITY_SELECTOR: CategorySelector<LineDensity> = new CategorySelector<LineDensity>([
         { category: LineDensity.LOW, range: new Range(5, 15) },
         { category: LineDensity.MEDIUM, range: new Range(10, 30) },
-        { category: LineDensity.HIGH, range: new Range(25, 100) }
+        { category: LineDensity.HIGH, range: new Range(25, 200) }
     ], false);
 
     function buildPalettes(): Palette[] {
@@ -87,16 +87,14 @@ function sketch(p5: P5Lib): void {
 
         LINE_DENSITY_SELECTOR.setRandomCategory();
 
+        const lineFill: LineFill = Random.randomElement([LineFill.EVEN_OVERLAP, LineFill.RANDOM_OVERLAP]) ?? LineFill.EVEN_OVERLAP;
+
         const config: LinesConfig = {
             NAME: 'Falling Lines',
-            LINE_TOTAL: LINE_DENSITY_SELECTOR.getChoice(),
+            LINE_TOTAL: Math.floor(LINE_DENSITY_SELECTOR.getChoice()),
             COLOR_SELECTOR: selector,
 
-            LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP,
-
-            LINE_LENGTH_CATEGORY: LineLength.FULL_SCREEN,
-            SAME_LENGTH: true,
-            CONSTANT_LENGTH: false
+            LINE_FILL_CATEGORY: lineFill
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);

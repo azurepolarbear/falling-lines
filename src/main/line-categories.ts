@@ -60,7 +60,8 @@ export enum LineTransparency {
     SOLID = 'solid',
     LOW_TRANSPARENCY = 'low-transparency',
     MEDIUM_TRANSPARENCY = 'medium-transparency',
-    HIGH_TRANSPARENCY = 'high-transparency'
+    HIGH_TRANSPARENCY = 'high-transparency',
+    MIXED = 'mixed'
 }
 
 export enum LineGradient {

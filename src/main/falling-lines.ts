@@ -15,7 +15,7 @@ import {
 } from '@batpb/genart';
 
 import { Line } from './line';
-import { LineFill, LineLength, LineThickness } from './line-categories';
+import { LineFill, LineLength, LineThickness, LineTransparency } from './line-categories';
 import { CategorySelector } from './selector';
 
 export interface LinesConfig {
@@ -39,6 +39,9 @@ export interface LinesConfig {
      * Should all the {@link Line} objects be the same length?
      */
     readonly CONSTANT_LENGTH?: boolean;
+
+    readonly LINE_TRANSPARENCY_CATEGORY?: LineTransparency;
+    readonly SAME_TRANSPARENCY?: boolean;
 }
 
 export class FallingLines extends CanvasScreen {
@@ -58,6 +61,14 @@ export class FallingLines extends CanvasScreen {
         { category: LineLength.FULL_SCREEN, range: new Range(0.85, 1.1) },
         { category: LineLength.FULL_SCREEN_ONLY, range: new Range(1, 1) },
         { category: LineLength.MIXED, range: new Range(0.05, 1.1) }
+    ], false);
+
+    static #LINE_TRANSPARENCY_SELECTOR: CategorySelector<LineTransparency> = new CategorySelector<LineTransparency>([
+        { category: LineTransparency.SOLID, range: new Range(255, 255) },
+        { category: LineTransparency.LOW_TRANSPARENCY, range: new Range(175, 255) },
+        { category: LineTransparency.MEDIUM_TRANSPARENCY, range: new Range(95, 180) },
+        { category: LineTransparency.HIGH_TRANSPARENCY, range: new Range(5, 100) },
+        { category: LineTransparency.MIXED, range: new Range(5, 255) }
     ], false);
 
     readonly #LINES: Line[] = [];
@@ -82,6 +93,7 @@ export class FallingLines extends CanvasScreen {
 
         this.#initializeLineThicknessSelector(config.THICKNESS_CATEGORY, config.SAME_THICKNESS);
         this.#initializeLineLengthSelector(config.LINE_LENGTH_CATEGORY, config.SAME_LENGTH);
+        this.#initializeLineTransparencySelector(config.LINE_TRANSPARENCY_CATEGORY, config.SAME_TRANSPARENCY);
 
         this.#build(this.#LINE_FILL, this.#CONSTANT_LENGTH);
     }
@@ -150,13 +162,20 @@ export class FallingLines extends CanvasScreen {
 
     #logFeatures(): void {
         console.log('FallingLines:');
+
         console.log(`  LINE_TOTAL: ${this.#lineTotal}`);
+
         console.log(`  LINE_FILL_CATEGORY: ${this.#LINE_FILL}`);
+
         console.log(`  THICKNESS_CATEGORY: ${FallingLines.#LINE_THICKNESS_SELECTOR.currentCategory}`);
         console.log(`  SAME_THICKNESS: ${FallingLines.#LINE_THICKNESS_SELECTOR.sameChoice}`);
+
         console.log(`  LINE_LENGTH_CATEGORY: ${FallingLines.#LINE_LENGTH_SELECTOR.currentCategory}`);
         console.log(`  SAME_LENGTH: ${FallingLines.#LINE_LENGTH_SELECTOR.sameChoice}`);
         console.log(`  CONSTANT_LENGTH: ${this.#CONSTANT_LENGTH}`);
+
+        console.log(`  LINE_TRANSPARENCY_CATEGORY: ${FallingLines.#LINE_TRANSPARENCY_SELECTOR.currentCategory}`);
+        console.log(`  SAME_TRANSPARENCY: ${FallingLines.#LINE_TRANSPARENCY_SELECTOR.sameChoice}`);
     }
 
     #initializeLineThicknessSelector(category?: LineThickness, same?: boolean): void {
@@ -184,6 +203,20 @@ export class FallingLines extends CanvasScreen {
             FallingLines.#LINE_LENGTH_SELECTOR.sameChoice = same;
         } else {
             FallingLines.#LINE_LENGTH_SELECTOR.sameChoice = Random.randomBoolean();
+        }
+    }
+
+    #initializeLineTransparencySelector(category?: LineTransparency, same?: boolean): void {
+        if (category) {
+            FallingLines.#LINE_TRANSPARENCY_SELECTOR.currentCategory = category;
+        } else {
+            FallingLines.#LINE_TRANSPARENCY_SELECTOR.setRandomCategory();
+        }
+
+        if (typeof same === 'boolean') {
+            FallingLines.#LINE_TRANSPARENCY_SELECTOR.sameChoice = same;
+        } else {
+            FallingLines.#LINE_TRANSPARENCY_SELECTOR.sameChoice = Random.randomBoolean();
         }
     }
 
@@ -222,7 +255,7 @@ export class FallingLines extends CanvasScreen {
             const end: Coordinate = new Coordinate();
             end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
 
-            const color: Color = this.#COLOR_SELECTOR.getColor();
+            const color: Color = this.#getLineColor();
             const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
             this.#addLine(new Line(start, end, color, thickness));
         }
@@ -250,7 +283,8 @@ export class FallingLines extends CanvasScreen {
             const end: Coordinate = new Coordinate();
             end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
 
-            const color: Color = this.#COLOR_SELECTOR.getColor();
+            const color: Color = this.#getLineColor();
+
             const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
             this.#addLine(new Line(start, end, color, thickness));
 
@@ -283,6 +317,12 @@ export class FallingLines extends CanvasScreen {
         }
 
         return Random.randomFloat(minLineLength, maxLineLength);
+    }
+
+    #getLineColor(): Color {
+        const color: Color = this.#COLOR_SELECTOR.getColor();
+        color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
+        return color;
     }
 
     #addLine(line: Line): void {
