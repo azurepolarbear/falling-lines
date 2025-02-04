@@ -11,7 +11,8 @@ import {
     CoordinateMode,
     P5Context,
     Random,
-    Range } from '@batpb/genart';
+    Range
+} from '@batpb/genart';
 
 import { Line } from './line';
 import { LineFill, LineLength, LineThickness } from './line-categories';
@@ -51,15 +52,19 @@ export class FallingLines extends CanvasScreen {
     ], false);
 
     static #LINE_LENGTH_SELECTOR: CategorySelector<LineLength> = new CategorySelector<LineLength>([
-        { category: LineLength.SHORT, range: new Range(0.05, 0.25) },
-        { category: LineLength.MEDIUM, range: new Range(0.25, 0.5) },
-        { category: LineLength.LONG, range: new Range(0.5, 0.75) },
-        { category: LineLength.FULL_SCREEN, range: new Range(0.75, 1) },
-        { category: LineLength.FULL_SCREEN_ONLY, range: new Range(1, 1) }
+        { category: LineLength.SHORT, range: new Range(0.05, 0.35) },
+        { category: LineLength.MEDIUM, range: new Range(0.3, 0.7) },
+        { category: LineLength.LONG, range: new Range(0.65, 0.9) },
+        { category: LineLength.FULL_SCREEN, range: new Range(0.85, 1.1) },
+        { category: LineLength.FULL_SCREEN_ONLY, range: new Range(1, 1) },
+        { category: LineLength.MIXED, range: new Range(0.05, 1.1) }
     ], false);
 
     readonly #LINES: Line[] = [];
     readonly #COLOR_SELECTOR: ColorSelector;
+
+    readonly #CONSTANT_LENGTH: boolean;
+    readonly #LINE_FILL: LineFill;
 
     #lineTotal: number;
 
@@ -92,7 +97,15 @@ export class FallingLines extends CanvasScreen {
             FallingLines.#LINE_LENGTH_SELECTOR.sameChoice = Random.randomBoolean();
         }
 
-        this.#build(config.LINE_FILL_CATEGORY, config.CONSTANT_LENGTH ?? Random.randomBoolean());
+        if (typeof config.CONSTANT_LENGTH === 'boolean') {
+            this.#CONSTANT_LENGTH = config.CONSTANT_LENGTH;
+        } else {
+            this.#CONSTANT_LENGTH = Random.randomBoolean();
+        }
+
+        this.#LINE_FILL = config.LINE_FILL_CATEGORY;
+
+        this.#build(this.#LINE_FILL, this.#CONSTANT_LENGTH);
     }
 
     public static get MIN_LENGTH_RATIO(): number {
@@ -126,6 +139,8 @@ export class FallingLines extends CanvasScreen {
             CanvasContext.updateAspectRatio(ASPECT_RATIOS.TIKTOK_PHOTO);
         } else if (p5.key === '4') {
             CanvasContext.updateAspectRatio(ASPECT_RATIOS.SOCIAL_VIDEO);
+        } else if (p5.key === ' ') {
+            this.#logFeatures();
         }
     }
 
@@ -155,41 +170,45 @@ export class FallingLines extends CanvasScreen {
         console.log('saveSet() placeholder');
     }
 
+    #logFeatures(): void {
+        console.log('FallingLines:');
+        console.log(`  LINE_TOTAL: ${this.#lineTotal}`);
+        console.log(`  LINE_FILL_CATEGORY: ${this.#LINE_FILL}`);
+        console.log(`  THICKNESS_CATEGORY: ${FallingLines.#LINE_THICKNESS_SELECTOR.currentCategory}`);
+        console.log(`  SAME_THICKNESS: ${FallingLines.#LINE_THICKNESS_SELECTOR.sameChoice}`);
+        console.log(`  LINE_LENGTH_CATEGORY: ${FallingLines.#LINE_LENGTH_SELECTOR.currentCategory}`);
+        console.log(`  SAME_LENGTH: ${FallingLines.#LINE_LENGTH_SELECTOR.sameChoice}`);
+        console.log(`  CONSTANT_LENGTH: ${this.#CONSTANT_LENGTH}`);
+    }
+
     #build(fill: LineFill, hasConstantLength: boolean): void {
         switch (fill) {
             case LineFill.EVEN_OVERLAP:
-                this.#buildEvenOverlapLines();
+                this.#buildEvenOverlapLines(hasConstantLength);
                 break;
             case LineFill.RANDOM_OVERLAP:
-                this.#buildRandomOverlapLines();
+                this.#buildRandomOverlapLines(hasConstantLength);
                 break;
             default:
                 break;
         }
     }
 
-    #buildEvenOverlapLines(): void {
+    #buildEvenOverlapLines(hasConstantLength: boolean): void {
         const p5: P5Lib = P5Context.p5;
         const canvasWidth: number = p5.width;
-        const canvasHeight: number = p5.height;
-        const minLineLength: number = canvasHeight * FallingLines.MIN_LENGTH_RATIO;
-        const maxLineLength: number = canvasHeight * FallingLines.MAX_LENGTH_RATIO;
         const spaceX: number = canvasWidth / (this.lineTotal + 1);
+        let length: number = this.#getLineLength();
 
         for (let i = 0; i < this.lineTotal; i++) {
             const x: number = (i + 1) * spaceX;
+
+            if (!hasConstantLength) {
+                length = this.#getLineLength();
+            }
+
             const startY: number = 0;
-            const possibleLength: number = maxLineLength;
-
-            // if (this.#maxLength === MaxLength.RIGHT) {
-            //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, minLineLength, maxLineLength);
-            // } else if (this.#maxLength === MaxLength.LEFT) {
-            //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, maxLineLength, minLineLength);
-            // } else {
-            //     possibleLength = maxLineLength;
-            // }
-
-            const endY: number = Random.randomFloat(minLineLength, possibleLength);
+            const endY: number = startY + length;
 
             const start: Coordinate = new Coordinate();
             start.setPosition(new P5Lib.Vector(x, startY), CoordinateMode.CANVAS);
@@ -203,80 +222,62 @@ export class FallingLines extends CanvasScreen {
         }
     }
 
-    #buildRandomOverlapLines(): void {
+    #buildRandomOverlapLines(hasConstantLength: boolean): void {
         const p5: P5Lib = P5Context.p5;
         const canvasWidth: number = p5.width;
-        const canvasHeight: number = p5.height;
-        const minLineLength: number = canvasHeight * FallingLines.MIN_LENGTH_RATIO;
-        const maxLineLength: number = canvasHeight * FallingLines.MAX_LENGTH_RATIO;
         const spaceX: number = canvasWidth / (this.lineTotal + 1);
-        let startX: number = Random.randomFloat(0, spaceX);
+        let x: number = Random.randomFloat(0, spaceX);
         let total: number = 0;
+        let length: number = this.#getLineLength();
 
-        while (startX < CoordinateMapper.maxX) {
+        while (x < CoordinateMapper.maxX) {
+            if (!hasConstantLength) {
+                length = this.#getLineLength();
+            }
+
             const startY: number = 0;
-            const endX: number = startX;
-            const possibleLength: number = maxLineLength;
-
-            // if (this.#maxLength === MaxLength.RIGHT) {
-            //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, minLineLength, maxLineLength);
-            // } else if (this.#maxLength === MaxLength.LEFT) {
-            //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, maxLineLength, minLineLength);
-            // } else {
-            //     possibleLength = maxLineLength;
-            // }
-
-            const endY: number = Random.randomFloat(minLineLength, possibleLength);
+            const endY: number = startY + length;
 
             const start: Coordinate = new Coordinate();
-            start.setPosition(new P5Lib.Vector(startX, startY), CoordinateMode.CANVAS);
+            start.setPosition(new P5Lib.Vector(x, startY), CoordinateMode.CANVAS);
 
             const end: Coordinate = new Coordinate();
-            end.setPosition(new P5Lib.Vector(endX, endY), CoordinateMode.CANVAS);
+            end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
 
             const color: Color = this.#COLOR_SELECTOR.getColor();
             const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
             this.#addLine(new Line(start, end, color, thickness));
 
-            startX += Random.randomFloat(spaceX * 0.1, spaceX * 1.5);
+            x += Random.randomFloat(spaceX * 0.1, spaceX * 1.5);
             total++;
         }
 
         this.#lineTotal = total;
     }
 
-    // #buildLines(): void {
-    //     const p5: P5Lib = P5Context.p5;
-    //     const canvasWidth: number = p5.width;
-    //     const canvasHeight: number = p5.height;
-    //     const minLineLength: number = canvasHeight * this.minLineLengthRatio;
-    //     const maxLineLength: number = canvasHeight * this.maxLineLengthRatio;
-    //     const spaceX: number = canvasWidth / this.lineTotal;
-    //     let startX: number = Random.randomFloat(0, spaceX);
+    #getLineLength(): number {
+        const p5: P5Lib = P5Context.p5;
+        const canvasHeight: number = p5.height;
+        const lengthRange = FallingLines.#LINE_LENGTH_SELECTOR.getCurrentCategoryRange();
 
-    //     while (startX < CoordinateMapper.maxX) {
-    //         const startY: number = 0;
-    //         const endX: number = startX;
-    //         const possibleLength: number = maxLineLength;
+        let minLineLength: number = canvasHeight * FallingLines.MIN_LENGTH_RATIO;
+        let maxLineLength: number = canvasHeight * FallingLines.MAX_LENGTH_RATIO;
 
-    //         // if (this.#maxLength === MaxLength.RIGHT) {
-    //         //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, minLineLength, maxLineLength);
-    //         // } else if (this.#maxLength === MaxLength.LEFT) {
-    //         //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, maxLineLength, minLineLength);
-    //         // } else {
-    //         //     possibleLength = maxLineLength;
-    //         // }
+        // if (this.#maxLength === MaxLength.RIGHT) {
+        //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, minLineLength, maxLineLength);
+        // } else if (this.#maxLength === MaxLength.LEFT) {
+        //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, maxLineLength, minLineLength);
+        // } else {
+        //     possibleLength = maxLineLength;
+        // }
 
-    //         const endY: number = Random.randomFloat(minLineLength, possibleLength);
-    //         const color: Color = this.colorSelector.getColor();
-    //         const start: Coordinate = new Coordinate();
-    //         start.setPosition(new P5Lib.Vector(startX, startY), CoordinateMode.CANVAS);
-    //         const end: Coordinate = new Coordinate();
-    //         end.setPosition(new P5Lib.Vector(endX, endY), CoordinateMode.CANVAS);
-    //         this.#addLine(new Line(start, end, color, this.#getThickness()));
-    //         startX += Random.randomFloat(spaceX * 0.25, spaceX * 1.25);
-    //     }
-    // }
+        if (lengthRange) {
+            minLineLength = canvasHeight * lengthRange.min;
+            maxLineLength = canvasHeight * FallingLines.#LINE_LENGTH_SELECTOR.getChoice();
+        }
+
+        return Random.randomFloat(minLineLength, maxLineLength);
+    }
 
     #addLine(line: Line): void {
         this.#LINES.push(line);

@@ -51,7 +51,8 @@ export enum LineLength {
     MEDIUM = 'medium',
     LONG = 'long',
     FULL_SCREEN = 'full-screen',
-    FULL_SCREEN_ONLY = 'full-screen-only'
+    FULL_SCREEN_ONLY = 'full-screen-only',
+    MIXED = 'mixed'
 }
 
 // TODO - implement LineTransparency categories
