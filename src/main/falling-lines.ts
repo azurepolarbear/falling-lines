@@ -14,7 +14,7 @@ import {
     Range } from '@batpb/genart';
 
 import { Line } from './line';
-import { LineFill, LineThickness } from './line-categories';
+import { LineFill, LineLength, LineThickness } from './line-categories';
 import { CategorySelector } from './selector';
 
 export interface LinesConfig {
@@ -26,6 +26,18 @@ export interface LinesConfig {
 
     readonly THICKNESS_CATEGORY?: LineThickness;
     readonly SAME_THICKNESS?: boolean;
+
+    readonly LINE_LENGTH_CATEGORY?: LineLength;
+
+    /**
+     * Should the {@link LineLength} {@link CategorySelector} return the same value for all lines?
+     */
+    readonly SAME_LENGTH?: boolean;
+
+    /**
+     * Should all the {@link Line} objects be the same length?
+     */
+    readonly CONSTANT_LENGTH?: boolean;
 }
 
 export class FallingLines extends CanvasScreen {
@@ -38,10 +50,18 @@ export class FallingLines extends CanvasScreen {
         { category: LineThickness.MIXED, range: new Range(0.25, 50) }
     ], false);
 
+    static #LINE_LENGTH_SELECTOR: CategorySelector<LineLength> = new CategorySelector<LineLength>([
+        { category: LineLength.SHORT, range: new Range(0.05, 0.25) },
+        { category: LineLength.MEDIUM, range: new Range(0.25, 0.5) },
+        { category: LineLength.LONG, range: new Range(0.5, 0.75) },
+        { category: LineLength.FULL_SCREEN, range: new Range(0.75, 1) },
+        { category: LineLength.FULL_SCREEN_ONLY, range: new Range(1, 1) }
+    ], false);
+
     readonly #LINES: Line[] = [];
     readonly #COLOR_SELECTOR: ColorSelector;
 
-    #lineTotal: number = 2;
+    #lineTotal: number;
 
     public constructor(config: LinesConfig) {
         super(config.NAME);
@@ -60,7 +80,19 @@ export class FallingLines extends CanvasScreen {
             FallingLines.#LINE_THICKNESS_SELECTOR.sameChoice = Random.randomBoolean();
         }
 
-        this.#build(config.LINE_FILL_CATEGORY);
+        if (config.LINE_LENGTH_CATEGORY) {
+            FallingLines.#LINE_LENGTH_SELECTOR.currentCategory = config.LINE_LENGTH_CATEGORY;
+        } else {
+            FallingLines.#LINE_LENGTH_SELECTOR.setRandomCategory();
+        }
+
+        if (typeof config.SAME_LENGTH === 'boolean') {
+            FallingLines.#LINE_LENGTH_SELECTOR.sameChoice = config.SAME_LENGTH;
+        } else {
+            FallingLines.#LINE_LENGTH_SELECTOR.sameChoice = Random.randomBoolean();
+        }
+
+        this.#build(config.LINE_FILL_CATEGORY, config.CONSTANT_LENGTH ?? Random.randomBoolean());
     }
 
     public static get MIN_LENGTH_RATIO(): number {
@@ -123,7 +155,7 @@ export class FallingLines extends CanvasScreen {
         console.log('saveSet() placeholder');
     }
 
-    #build(fill: LineFill): void {
+    #build(fill: LineFill, hasConstantLength: boolean): void {
         switch (fill) {
             case LineFill.EVEN_OVERLAP:
                 this.#buildEvenOverlapLines();

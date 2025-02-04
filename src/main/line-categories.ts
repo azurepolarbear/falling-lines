@@ -1,4 +1,3 @@
-// TODO - implement LineDensity categories
 export enum LineDensity {
     LOW = 'low',
     MEDIUM = 'medium',
@@ -47,6 +46,14 @@ export enum LineFill {
     CLUSTERS = 'clusters'
 }
 
+export enum LineLength {
+    SHORT = 'short',
+    MEDIUM = 'medium',
+    LONG = 'long',
+    FULL_SCREEN = 'full-screen',
+    FULL_SCREEN_ONLY = 'full-screen-only'
+}
+
 // TODO - implement LineTransparency categories
 export enum LineTransparency {
     SOLID = 'solid',
@@ -77,14 +84,6 @@ export enum ColorLayout {
      * Gradient is built from one side of the window to the other.
      */
     WINDOW_GRADIENT = 'window-gradient'
-}
-
-export enum LineLength {
-    SHORT = 'short',
-    MEDIUM = 'medium',
-    LONG = 'long',
-    FULL_SCREEN = 'full-screen',
-    FULL_SCREEN_ONLY = 'full-screen-only'
 }
 
 export enum LineTrend {
