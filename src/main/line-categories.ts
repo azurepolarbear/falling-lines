@@ -76,7 +76,7 @@ export enum ColorLayout {
     /**
      * Gradient is built from one side of the window to the other.
      */
-    WINDOW_GRADIENT = 'window-gradient',
+    WINDOW_GRADIENT = 'window-gradient'
 }
 
 export enum LineLength {
@@ -90,7 +90,7 @@ export enum LineLength {
 export enum LineTrend {
     CONSTANT = 'constant',
     INCREASE_TO_LEFT = 'increase-to-left',
-    INCREASE_TO_RIGHT = 'increase-to-right',
+    INCREASE_TO_RIGHT = 'increase-to-right'
 }
 
 export enum LineAlignment {

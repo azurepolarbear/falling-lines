@@ -92,7 +92,7 @@ function sketch(p5: P5Lib): void {
             LINE_TOTAL: LINE_DENSITY_SELECTOR.getChoice(),
             COLOR_SELECTOR: selector,
 
-            LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP,
+            LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);

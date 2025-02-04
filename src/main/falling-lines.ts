@@ -185,7 +185,7 @@ export class FallingLines extends CanvasScreen {
             const startY: number = 0;
             const endX: number = startX;
             const possibleLength: number = maxLineLength;
-        
+
             // if (this.#maxLength === MaxLength.RIGHT) {
             //     length = p5.map(startX, CoordinateMapper.minX, CoordinateMapper.maxX, minLineLength, maxLineLength);
             // } else if (this.#maxLength === MaxLength.LEFT) {
@@ -193,7 +193,7 @@ export class FallingLines extends CanvasScreen {
             // } else {
             //     possibleLength = maxLineLength;
             // }
-        
+
             const endY: number = Random.randomFloat(minLineLength, possibleLength);
 
             const start: Coordinate = new Coordinate();
