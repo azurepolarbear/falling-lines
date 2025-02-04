@@ -72,30 +72,7 @@ export class FallingLines extends CanvasScreen {
         super(config.NAME);
         this.#COLOR_SELECTOR = config.COLOR_SELECTOR;
         this.#lineTotal = config.LINE_TOTAL;
-
-        if (config.THICKNESS_CATEGORY) {
-            FallingLines.#LINE_THICKNESS_SELECTOR.currentCategory = config.THICKNESS_CATEGORY;
-        } else {
-            FallingLines.#LINE_THICKNESS_SELECTOR.setRandomCategory();
-        }
-
-        if (typeof config.SAME_THICKNESS === 'boolean') {
-            FallingLines.#LINE_THICKNESS_SELECTOR.sameChoice = config.SAME_THICKNESS;
-        } else {
-            FallingLines.#LINE_THICKNESS_SELECTOR.sameChoice = Random.randomBoolean();
-        }
-
-        if (config.LINE_LENGTH_CATEGORY) {
-            FallingLines.#LINE_LENGTH_SELECTOR.currentCategory = config.LINE_LENGTH_CATEGORY;
-        } else {
-            FallingLines.#LINE_LENGTH_SELECTOR.setRandomCategory();
-        }
-
-        if (typeof config.SAME_LENGTH === 'boolean') {
-            FallingLines.#LINE_LENGTH_SELECTOR.sameChoice = config.SAME_LENGTH;
-        } else {
-            FallingLines.#LINE_LENGTH_SELECTOR.sameChoice = Random.randomBoolean();
-        }
+        this.#LINE_FILL = config.LINE_FILL_CATEGORY;
 
         if (typeof config.CONSTANT_LENGTH === 'boolean') {
             this.#CONSTANT_LENGTH = config.CONSTANT_LENGTH;
@@ -103,7 +80,8 @@ export class FallingLines extends CanvasScreen {
             this.#CONSTANT_LENGTH = Random.randomBoolean();
         }
 
-        this.#LINE_FILL = config.LINE_FILL_CATEGORY;
+        this.#initializeLineThicknessSelector(config.THICKNESS_CATEGORY, config.SAME_THICKNESS);
+        this.#initializeLineLengthSelector(config.LINE_LENGTH_CATEGORY, config.SAME_LENGTH);
 
         this.#build(this.#LINE_FILL, this.#CONSTANT_LENGTH);
     }
@@ -179,6 +157,34 @@ export class FallingLines extends CanvasScreen {
         console.log(`  LINE_LENGTH_CATEGORY: ${FallingLines.#LINE_LENGTH_SELECTOR.currentCategory}`);
         console.log(`  SAME_LENGTH: ${FallingLines.#LINE_LENGTH_SELECTOR.sameChoice}`);
         console.log(`  CONSTANT_LENGTH: ${this.#CONSTANT_LENGTH}`);
+    }
+
+    #initializeLineThicknessSelector(category?: LineThickness, same?: boolean): void {
+        if (category) {
+            FallingLines.#LINE_THICKNESS_SELECTOR.currentCategory = category;
+        } else {
+            FallingLines.#LINE_THICKNESS_SELECTOR.setRandomCategory();
+        }
+
+        if (typeof same === 'boolean') {
+            FallingLines.#LINE_THICKNESS_SELECTOR.sameChoice = same;
+        } else {
+            FallingLines.#LINE_THICKNESS_SELECTOR.sameChoice = Random.randomBoolean();
+        }
+    }
+
+    #initializeLineLengthSelector(category?: LineLength, same?: boolean): void {
+        if (category) {
+            FallingLines.#LINE_LENGTH_SELECTOR.currentCategory = category;
+        } else {
+            FallingLines.#LINE_LENGTH_SELECTOR.setRandomCategory();
+        }
+
+        if (typeof same === 'boolean') {
+            FallingLines.#LINE_LENGTH_SELECTOR.sameChoice = same;
+        } else {
+            FallingLines.#LINE_LENGTH_SELECTOR.sameChoice = Random.randomBoolean();
+        }
     }
 
     #build(fill: LineFill, hasConstantLength: boolean): void {
