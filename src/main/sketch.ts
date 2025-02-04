@@ -33,23 +33,28 @@ import {
     P5Context,
     PaletteColorSelector,
     Random,
+    Range,
     ScreenHandler
 } from '@batpb/genart';
 
 import { HexColorSelector } from './color';
-import { LineFill } from './line-categories';
+import { LineDensity, LineFill } from './line-categories';
 import { FallingLines, LinesConfig } from './falling-lines';
-// import { CategorySelector } from './selector';
+import { CategorySelector } from './selector';
 
 interface Palette {
     name: string;
     colors: string[];
 }
 
+// TODO - selecting a high density makes it more likely to select a smaller thickness.
+
 function sketch(p5: P5Lib): void {
-    // const LINE_DENSITY_SELECTOR: CategorySelector<LineDensity> = new CategorySelector<LineDensity>([
-    //     { category: LineDensity.LOW, range: new Range(5, 15) }
-    // ], false);
+    const LINE_DENSITY_SELECTOR: CategorySelector<LineDensity> = new CategorySelector<LineDensity>([
+        { category: LineDensity.LOW, range: new Range(5, 15) },
+        { category: LineDensity.MEDIUM, range: new Range(10, 30) },
+        { category: LineDensity.HIGH, range: new Range(25, 100) }
+    ], false);
 
     function buildPalettes(): Palette[] {
         return [
@@ -80,12 +85,14 @@ function sketch(p5: P5Lib): void {
 
         selector = new HexColorSelector(false, ['#FF0000', '#FFFFFF']);
 
+        LINE_DENSITY_SELECTOR.setRandomCategory();
+
         const config: LinesConfig = {
             NAME: 'Falling Lines',
-            LINE_TOTAL: 25,
+            LINE_TOTAL: LINE_DENSITY_SELECTOR.getChoice(),
             COLOR_SELECTOR: selector,
 
-            LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP
+            LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP,
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);
