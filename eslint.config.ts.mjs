@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2024 brittni and the polar bear LLC.
+ * Copyright (C) 2024-2025 brittni and the polar bear LLC.
  *
- * This file is a part of brittni and the polar bear's @batpb/genart project template,
+ * This file is a part of azurepolarbear's falling lines algorithmic art project,
  * which is released under the GNU Affero General Public License, Version 3.0.
  * You may not use this file except in compliance with the license.
  *
