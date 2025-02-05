@@ -55,7 +55,12 @@ export enum LineLength {
     MIXED = 'mixed'
 }
 
-// TODO - implement LineTransparency categories
+export enum LineTrend {
+    CONSTANT = 'constant',
+    INCREASE_TO_LEFT = 'increase-to-left',
+    INCREASE_TO_RIGHT = 'increase-to-right'
+}
+
 export enum LineTransparency {
     SOLID = 'solid',
     LOW_TRANSPARENCY = 'low-transparency',
@@ -86,12 +91,6 @@ export enum ColorLayout {
      * Gradient is built from one side of the window to the other.
      */
     WINDOW_GRADIENT = 'window-gradient'
-}
-
-export enum LineTrend {
-    CONSTANT = 'constant',
-    INCREASE_TO_LEFT = 'increase-to-left',
-    INCREASE_TO_RIGHT = 'increase-to-right'
 }
 
 export enum LineAlignment {
