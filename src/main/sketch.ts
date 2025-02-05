@@ -38,7 +38,7 @@ import {
 } from '@batpb/genart';
 
 import { HexColorSelector } from './color';
-import { LineDensity, LineFill, LineTrend } from './line-categories';
+import { LineDensity, LineFill, LineLength, LineTrend } from './line-categories';
 import { FallingLines, LinesConfig } from './falling-lines';
 import { CategorySelector } from './selector';
 
@@ -72,7 +72,7 @@ function sketch(p5: P5Lib): void {
 
     p5.setup = (): void => {
         P5Context.initialize(p5);
-        CanvasContext.buildCanvas(ASPECT_RATIOS.SQUARE, 720, p5.P2D, true);
+        CanvasContext.buildCanvas(ASPECT_RATIOS.SQUARE, 720, p5.WEBGL, true);
         const palettes: Palette[] = buildPalettes();
         const palette: Palette | undefined = Random.randomElement(palettes);
         let selector: ColorSelector;
@@ -87,15 +87,16 @@ function sketch(p5: P5Lib): void {
 
         LINE_DENSITY_SELECTOR.setRandomCategory();
 
-        const lineFill: LineFill = Random.randomElement([LineFill.EVEN_OVERLAP, LineFill.RANDOM_OVERLAP]) ?? LineFill.EVEN_OVERLAP;
-        const lineTrend: LineTrend = Random.randomElement(Object.values(LineTrend)) ?? LineTrend.CONSTANT;
+        // const lineFill: LineFill = Random.randomElement([LineFill.EVEN_OVERLAP, LineFill.RANDOM_OVERLAP]) ?? LineFill.EVEN_OVERLAP;
+        // const lineTrend: LineTrend = Random.randomElement(Object.values(LineTrend)) ?? LineTrend.CONSTANT;
 
         const config: LinesConfig = {
             NAME: 'Falling Lines',
             LINE_TOTAL: Math.floor(LINE_DENSITY_SELECTOR.getChoice()),
-            LINE_FILL_CATEGORY: lineFill,
-            LINE_TREND_CATEGORY: lineTrend,
-            COLOR_SELECTOR: selector
+            LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP,
+            LINE_TREND_CATEGORY: LineTrend.CONSTANT,
+            COLOR_SELECTOR: selector,
+            LINE_LENGTH_CATEGORY: LineLength.FULL_SCREEN_ONLY,
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);

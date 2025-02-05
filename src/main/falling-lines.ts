@@ -14,9 +14,10 @@ import {
     Range
 } from '@batpb/genart';
 
-import { Line } from './line';
+import { GradientLine, Line } from './line';
 import { LineFill, LineLength, LineThickness, LineTransparency, LineTrend } from './line-categories';
 import { CategorySelector } from './selector';
+import { Gradient } from './color';
 
 export interface LinesConfig {
     readonly NAME: string;
@@ -99,6 +100,14 @@ export class FallingLines extends CanvasScreen {
 
     public static get MAX_X(): number {
         return CoordinateMapper.maxX;
+    }
+
+    public static get MIN_Y(): number {
+        return CoordinateMapper.minY;
+    }
+
+    public static get MAX_Y(): number {
+        return CoordinateMapper.maxY;
     }
 
     public get lineTotal(): number {
@@ -233,10 +242,10 @@ export class FallingLines extends CanvasScreen {
         const spaceX: number = canvasWidth / (this.lineTotal + 1);
 
         for (let i = 0; i < this.lineTotal; i++) {
-            const x: number = (i + 1) * spaceX;
+            const x: number = ((i + 1) * spaceX) + FallingLines.MIN_X;
             length = this.#getLineLength(x);
 
-            const startY: number = 0;
+            const startY: number = FallingLines.MIN_Y;
             const endY: number = startY + length;
 
             const start: Coordinate = new Coordinate();
@@ -255,12 +264,12 @@ export class FallingLines extends CanvasScreen {
         const p5: P5Lib = P5Context.p5;
         const canvasWidth: number = p5.width;
         const spaceX: number = canvasWidth / (this.lineTotal + 1);
-        let x: number = Random.randomFloat(0, spaceX);
+        let x: number = Random.randomFloat(FallingLines.MIN_X, FallingLines.MIN_X + spaceX);
         let total: number = 0;
 
         while (x < CoordinateMapper.maxX) {
             length = this.#getLineLength(x);
-            const startY: number = 0;
+            const startY: number = FallingLines.MIN_Y;
             const endY: number = startY + length;
 
             const start: Coordinate = new Coordinate();
@@ -269,10 +278,10 @@ export class FallingLines extends CanvasScreen {
             const end: Coordinate = new Coordinate();
             end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
 
-            const color: Color = this.#getLineColor();
+            // const color: Color = this.#getLineColor();
 
             const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
-            this.#addLine(new Line(start, end, color, thickness));
+            this.#addLine(this.#buildLine(start, end, thickness));
 
             x += Random.randomFloat(spaceX * 0.1, spaceX * 1.5);
             total++;
@@ -300,6 +309,17 @@ export class FallingLines extends CanvasScreen {
         const color: Color = this.#COLOR_SELECTOR.getColor();
         color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
         return color;
+    }
+
+    #buildLine(start: Coordinate, end: Coordinate, strokeWeightMultiplier: number): Line {
+        const gradient: Gradient = new Gradient([
+            { color: new Color(255, 0, 0, 50), mapMax: 0 },
+            { color: new Color(0, 255, 0, 50), mapMax: CoordinateMapper.maxY * 0.33 },
+            { color: new Color(255, 255, 0, 50), mapMax: CoordinateMapper.maxY * 0.66 },
+            { color: new Color(0, 0, 255, 50), mapMax: CoordinateMapper.maxY },
+        ]);
+
+        return new GradientLine(start, end, strokeWeightMultiplier, gradient, 3);
     }
 
     #addLine(line: Line): void {
