@@ -23,12 +23,15 @@
 
 import { Color, P5Context } from "@batpb/genart";
 
+// TODO - name change: MappedGradient
 // TODO - implement in @batpb/genart library
 
 export interface GradientStep {
     color: Color;
     mapMax: number;
 }
+
+// TODO - gradient color should be retrieved from percentage of line length, not from the line length itself
 
 export class Gradient {
     readonly #STEPS: GradientStep[] = [];

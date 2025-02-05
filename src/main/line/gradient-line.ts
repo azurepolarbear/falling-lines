@@ -27,7 +27,11 @@ import { Gradient } from "../color";
 
 import P5Lib from "p5";
 
-// TODO - draw type: SEGMENT or SINGLE_LINE
+// TODO - gradient color should be retrieved from percentage of line length, not from the line length itself
+// TODO - determine next point using lerp and gradient percentage.
+
+// TODO name update: VerticalGradientLine
+// TODO get minY and maxY of gradient --> tells what percentages to apply over the gradient
 
 export class GradientLine extends Line {
     // readonly #SLICE_TOTAL: number;
