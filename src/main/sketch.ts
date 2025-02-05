@@ -95,7 +95,7 @@ function sketch(p5: P5Lib): void {
             LINE_TOTAL: Math.floor(LINE_DENSITY_SELECTOR.getChoice()),
             LINE_FILL_CATEGORY: lineFill,
             LINE_TREND_CATEGORY: lineTrend,
-            COLOR_SELECTOR: selector,
+            COLOR_SELECTOR: selector
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);

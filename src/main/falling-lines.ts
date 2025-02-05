@@ -257,7 +257,6 @@ export class FallingLines extends CanvasScreen {
         const spaceX: number = canvasWidth / (this.lineTotal + 1);
         let x: number = Random.randomFloat(0, spaceX);
         let total: number = 0;
-        let length: number = this.#getLineLength(x);
 
         while (x < CoordinateMapper.maxX) {
             length = this.#getLineLength(x);
@@ -285,10 +284,7 @@ export class FallingLines extends CanvasScreen {
     #getLineLength(x: number): number {
         const p5: P5Lib = P5Context.p5;
         const canvasHeight: number = p5.height;
-        // const lengthRange = FallingLines.#LINE_LENGTH_SELECTOR.getCurrentCategoryRange();
-        let minLineLength: number = canvasHeight * FallingLines.MIN_LENGTH_RATIO;
-        // let maxLineLength: number = canvasHeight * FallingLines.MAX_LENGTH_RATIO;
-
+        const minLineLength: number = canvasHeight * FallingLines.MIN_LENGTH_RATIO;
         let length: number = canvasHeight * FallingLines.#LINE_LENGTH_SELECTOR.getChoice();
 
         if (this.#LINE_TREND === LineTrend.INCREASE_TO_LEFT) {
@@ -296,36 +292,9 @@ export class FallingLines extends CanvasScreen {
         } else if (this.#LINE_TREND === LineTrend.INCREASE_TO_RIGHT) {
             length = p5.map(x, FallingLines.MIN_X, FallingLines.MAX_X, minLineLength, length);
         }
-        
+
         return length;
     }
-
-    // #applyTrend(x: number, length: number): number {
-    //     const p5: P5Lib = P5Context.p5;
-    //     const canvasHeight: number = p5.height;
-
-    //     const lengthRange = FallingLines.#LINE_LENGTH_SELECTOR.getCurrentCategoryRange();
-    //     let minLineLength: number = canvasHeight * FallingLines.MIN_LENGTH_RATIO;
-
-    //     if (lengthRange) {
-    //         minLineLength = canvasHeight * lengthRange.min;
-    //     }
-        
-    //     console.log(FallingLines.MIN_X);
-    //     console.log(FallingLines.MAX_X);
-
-    //     if (this.#LINE_TREND === LineTrend.CONSTANT) {
-    //         return length;
-    //     } else if (this.#LINE_TREND === LineTrend.INCREASE_TO_LEFT) {
-    //         const maxLength: number  = p5.map(x, FallingLines.MIN_X, FallingLines.MAX_X, 720, minLineLength);
-    //         // return Random.randomFloat(minLineLength, maxLength);
-    //         console.log(`${x}: ${maxLength}`);
-    //         return maxLength;
-    //     } else {
-    //         const maxLength: number  = p5.map(x, FallingLines.MIN_X, FallingLines.MAX_X, minLineLength, length);
-    //         return Random.randomFloat(minLineLength, maxLength);
-    //     }
-    // }
 
     #getLineColor(): Color {
         const color: Color = this.#COLOR_SELECTOR.getColor();
