@@ -42,6 +42,14 @@ export class Gradient {
         return this.#STEPS.length;
     }
 
+    public getMapMax(stepIndex: number): number | undefined {
+        if (stepIndex >= 0 && stepIndex < this.#STEPS.length) {
+            return this.#STEPS[stepIndex].mapMax;
+        }
+
+        return undefined;
+    }
+
     public color(index: number): Color {
         return this.#STEPS[index].color;
     }

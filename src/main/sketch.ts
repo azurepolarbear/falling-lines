@@ -38,7 +38,7 @@ import {
 } from '@batpb/genart';
 
 import { HexColorSelector } from './color';
-import { LineDensity, LineFill, LineLength, LineTrend } from './line-categories';
+import {LineDensity, LineFill, LineLength, LineThickness, LineTrend} from './line-categories';
 import { FallingLines, LinesConfig } from './falling-lines';
 import { CategorySelector } from './selector';
 
@@ -92,11 +92,13 @@ function sketch(p5: P5Lib): void {
 
         const config: LinesConfig = {
             NAME: 'Falling Lines',
-            LINE_TOTAL: Math.floor(LINE_DENSITY_SELECTOR.getChoice()),
+            // LINE_TOTAL: Math.floor(LINE_DENSITY_SELECTOR.getChoice()),
+            LINE_TOTAL: 10,
             LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP,
             LINE_TREND_CATEGORY: LineTrend.CONSTANT,
             COLOR_SELECTOR: selector,
-            LINE_LENGTH_CATEGORY: LineLength.FULL_SCREEN_ONLY,
+            LINE_LENGTH_CATEGORY: LineLength.MIXED,
+            THICKNESS_CATEGORY: LineThickness.MIXED,
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);

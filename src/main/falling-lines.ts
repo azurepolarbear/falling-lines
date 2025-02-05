@@ -88,7 +88,7 @@ export class FallingLines extends CanvasScreen {
     ], false);
 
     readonly #LINES: Line[] = [];
-    readonly #COLOR_SELECTOR: ColorSelector;
+    // readonly #COLOR_SELECTOR: ColorSelector;
 
     readonly #LINE_FILL: LineFill;
     readonly #LINE_TREND: LineTrend;
@@ -97,7 +97,7 @@ export class FallingLines extends CanvasScreen {
 
     public constructor(config: LinesConfig) {
         super(config.NAME);
-        this.#COLOR_SELECTOR = config.COLOR_SELECTOR;
+        // this.#COLOR_SELECTOR = config.COLOR_SELECTOR;
         this.#lineTotal = config.LINE_TOTAL;
         this.#LINE_FILL = config.LINE_FILL_CATEGORY;
         this.#LINE_TREND = config.LINE_TREND_CATEGORY;
@@ -277,9 +277,9 @@ export class FallingLines extends CanvasScreen {
             const end: Coordinate = new Coordinate();
             end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
 
-            const color: Color = this.#getLineColor();
+            // const color: Color = this.#getLineColor();
             const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
-            this.#addLine(new Line(start, end, color, thickness));
+            this.#addLine(this.#buildLine(start, end, thickness));
         }
     }
 
@@ -328,18 +328,19 @@ export class FallingLines extends CanvasScreen {
         return length;
     }
 
-    #getLineColor(): Color {
-        const color: Color = this.#COLOR_SELECTOR.getColor();
-        color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
-        return color;
-    }
+    // #getLineColor(): Color {
+    //     const color: Color = this.#COLOR_SELECTOR.getColor();
+    //     color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
+    //     return color;
+    // }
 
     #buildLine(start: Coordinate, end: Coordinate, strokeWeightMultiplier: number): Line {
         const gradient: Gradient = new Gradient([
-            { color: new Color(255, 0, 0, 50), mapMax: 0 },
-            { color: new Color(0, 255, 0, 50), mapMax: CoordinateMapper.maxY * 0.33 },
-            { color: new Color(255, 255, 0, 50), mapMax: CoordinateMapper.maxY * 0.66 },
-            { color: new Color(0, 0, 255, 50), mapMax: CoordinateMapper.maxY },
+            { color: new Color(255, 0, 0, 50), mapMax: CoordinateMapper.minY },
+            { color: new Color(0, 255, 0, 50), mapMax: CoordinateMapper.minY + (P5Context.p5.height * 0.25) },
+            { color: new Color(255, 255, 0, 50), mapMax: CoordinateMapper.minY + (P5Context.p5.height * 0.5) },
+            { color: new Color(0, 0, 255, 50), mapMax: CoordinateMapper.minY + (P5Context.p5.height * 0.75) },
+            { color: new Color(255, 0, 255, 50), mapMax: CoordinateMapper.minY + (P5Context.p5.height) }
         ]);
 
         return new GradientLine(start, end, strokeWeightMultiplier, gradient, 3);
