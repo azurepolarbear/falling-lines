@@ -35,6 +35,8 @@ export class Gradient {
                 index++;
             }
 
+            console.log(`index: ${index}`);
+
             if (index === 0) {
                 color = this.#STEPS[index].color;
             } else {

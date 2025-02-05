@@ -4,6 +4,8 @@ import { Gradient } from "../color";
 
 import P5Lib from "p5";
 
+// TODO - draw type: SEGMENT or SINGLE_LINE
+
 export class GradientLine extends Line {
     // readonly #SLICE_TOTAL: number;
     readonly #SEGMENTS: Line[] = [];
@@ -27,6 +29,7 @@ export class GradientLine extends Line {
         const mode: CoordinateMode = CoordinateMode.CANVAS;
         const start: P5Lib.Vector = p5.createVector(startCoordinate.getX(mode), startCoordinate.getY(mode));
 
+        // segments built from gradient min and max values
         for (let i = 1; i < gradient.stepTotal; i++) {
             const percentage: number = i / (gradient.stepTotal - 1);
             const end: P5Lib.Vector = p5.createVector(endCoordinate.getX(mode), endCoordinate.getY(mode));
@@ -58,6 +61,7 @@ export class GradientLine extends Line {
     }
 
     public override draw(): void {
+        // plot all segment points in one beginShape()/endShape() call
         for (const segment of this.#SEGMENTS) {
             segment.draw();
         }
