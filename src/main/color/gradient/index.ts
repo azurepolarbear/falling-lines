@@ -21,4 +21,4 @@
  * for full license details.
  */
 
-export * from './gradient';
+export * from './mapped-gradient';
