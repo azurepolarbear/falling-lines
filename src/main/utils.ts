@@ -22,7 +22,7 @@
  */
 
 import P5Lib from 'p5';
-import { Coordinate, CoordinateMode } from '@batpb/genart';
+import {Coordinate, CoordinateMode, P5Context} from '@batpb/genart';
 
 function buildCoordinate(x: number, y: number, mode: CoordinateMode): Coordinate;
 function buildCoordinate(vector: P5Lib.Vector, mode: CoordinateMode): Coordinate;
@@ -45,4 +45,8 @@ function buildCoordinate(arg1: P5Lib.Vector | number, arg2: CoordinateMode | num
     return coordinate;
 }
 
-export { buildCoordinate };
+function buildVector(coordinate: Coordinate, mode: CoordinateMode): P5Lib.Vector {
+    return P5Context.p5.createVector(coordinate.getX(mode), coordinate.getY(mode));
+}
+
+export { buildCoordinate, buildVector };
