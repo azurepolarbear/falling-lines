@@ -22,7 +22,9 @@
  */
 
 import P5Lib from 'p5';
-import {Coordinate, CoordinateMode, P5Context} from '@batpb/genart';
+import { Coordinate, CoordinateMode, P5Context } from '@batpb/genart';
+
+// TODO - implement functionality in @batpb/genart library
 
 function buildCoordinate(x: number, y: number, mode: CoordinateMode): Coordinate;
 function buildCoordinate(vector: P5Lib.Vector, mode: CoordinateMode): Coordinate;
