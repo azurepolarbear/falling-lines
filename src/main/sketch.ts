@@ -29,7 +29,8 @@ import {
     ASPECT_RATIOS,
     BRITTNI_PALETTE,
     CanvasContext,
-    CanvasScreen, ColorSelector,
+    CanvasScreen,
+    ColorSelector,
     P5Context,
     PaletteColorSelector,
     Random,
@@ -37,10 +38,11 @@ import {
     ScreenHandler
 } from '@batpb/genart';
 
-import { HexColorSelector } from './color';
-import {LineDensity, LineFill, LineLength, LineThickness, LineTrend} from './line-categories';
-import { FallingLines, LinesConfig } from './falling-lines';
-import { CategorySelector } from './selector';
+import {HexColorSelector} from './color';
+import {LineDensity, LineFill, LineLength, LineTrend} from './line-categories';
+import {FallingLines, LinesConfig} from './falling-lines';
+import {CategorySelector} from './selector';
+import {LineRenderMode} from "./line";
 
 interface Palette {
     name: string;
@@ -51,7 +53,7 @@ interface Palette {
 
 function sketch(p5: P5Lib): void {
     const LINE_DENSITY_SELECTOR: CategorySelector<LineDensity> = new CategorySelector<LineDensity>([
-        { category: LineDensity.LOW, range: new Range(5, 15) },
+        // { category: LineDensity.LOW, range: new Range(5, 15) },
         { category: LineDensity.MEDIUM, range: new Range(10, 30) },
         { category: LineDensity.HIGH, range: new Range(25, 200) }
     ], false);
@@ -87,18 +89,22 @@ function sketch(p5: P5Lib): void {
 
         LINE_DENSITY_SELECTOR.setRandomCategory();
 
-        // const lineFill: LineFill = Random.randomElement([LineFill.EVEN_OVERLAP, LineFill.RANDOM_OVERLAP]) ?? LineFill.EVEN_OVERLAP;
-        // const lineTrend: LineTrend = Random.randomElement(Object.values(LineTrend)) ?? LineTrend.CONSTANT;
+        const lineFill: LineFill = Random.randomElement([LineFill.EVEN_OVERLAP, LineFill.RANDOM_OVERLAP]) ?? LineFill.EVEN_OVERLAP;
+        const lineTrend: LineTrend = Random.randomElement(Object.values(LineTrend)) ?? LineTrend.CONSTANT;
 
         const config: LinesConfig = {
             NAME: 'Falling Lines',
-            // LINE_TOTAL: Math.floor(LINE_DENSITY_SELECTOR.getChoice()),
-            LINE_TOTAL: 10,
-            LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP,
-            LINE_TREND_CATEGORY: LineTrend.CONSTANT,
+            LINE_TOTAL: Math.floor(LINE_DENSITY_SELECTOR.getChoice()),
+            // LINE_TOTAL: 25,
+            LINE_FILL_CATEGORY: lineFill,
+            // LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP,
+            LINE_TREND_CATEGORY: lineTrend,
+            // LINE_TREND_CATEGORY: LineTrend.CONSTANT,
             COLOR_SELECTOR: selector,
-            LINE_LENGTH_CATEGORY: LineLength.MIXED,
-            THICKNESS_CATEGORY: LineThickness.MIXED,
+            LINE_LENGTH_CATEGORY: Random.randomElement([LineLength.FULL_SCREEN, LineLength.MEDIUM, LineLength.LONG]) ?? LineLength.FULL_SCREEN,
+            // THICKNESS_CATEGORY: LineThickness.MIXED,
+            GRADIENT_RENDER: Random.randomElement(Object.values(LineRenderMode)),
+            // LINE_TRANSPARENCY_CATEGORY: LineTransparency.HIGH_TRANSPARENCY,
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);

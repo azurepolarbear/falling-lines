@@ -37,10 +37,10 @@ import {
     Range
 } from '@batpb/genart';
 
-import { GradientLine, Line } from './line';
+import {VerticalGradientLine, Line, LineRenderMode} from './line';
 import { LineFill, LineLength, LineThickness, LineTransparency, LineTrend } from './line-categories';
 import { CategorySelector } from './selector';
-import { Gradient } from './color';
+import { MappedGradient } from './color';
 
 export interface LinesConfig {
     readonly NAME: string;
@@ -58,6 +58,8 @@ export interface LinesConfig {
 
     readonly LINE_TRANSPARENCY_CATEGORY?: LineTransparency;
     readonly SAME_TRANSPARENCY?: boolean;
+
+    readonly GRADIENT_RENDER?: LineRenderMode;
 }
 
 export class FallingLines extends CanvasScreen {
@@ -83,8 +85,8 @@ export class FallingLines extends CanvasScreen {
         { category: LineTransparency.SOLID, range: new Range(255, 255) },
         { category: LineTransparency.LOW_TRANSPARENCY, range: new Range(175, 255) },
         { category: LineTransparency.MEDIUM_TRANSPARENCY, range: new Range(95, 180) },
-        { category: LineTransparency.HIGH_TRANSPARENCY, range: new Range(5, 100) },
-        { category: LineTransparency.MIXED, range: new Range(5, 255) }
+        { category: LineTransparency.HIGH_TRANSPARENCY, range: new Range(25, 100) },
+        { category: LineTransparency.MIXED, range: new Range(25, 255) }
     ], false);
 
     readonly #LINES: Line[] = [];
@@ -92,6 +94,7 @@ export class FallingLines extends CanvasScreen {
 
     readonly #LINE_FILL: LineFill;
     readonly #LINE_TREND: LineTrend;
+    readonly #GRADIENT_RENDER: LineRenderMode;
 
     #lineTotal: number;
 
@@ -101,6 +104,7 @@ export class FallingLines extends CanvasScreen {
         this.#lineTotal = config.LINE_TOTAL;
         this.#LINE_FILL = config.LINE_FILL_CATEGORY;
         this.#LINE_TREND = config.LINE_TREND_CATEGORY;
+        this.#GRADIENT_RENDER = config.GRADIENT_RENDER ?? LineRenderMode.VERTICES;
 
         this.#initializeLineThicknessSelector(config.THICKNESS_CATEGORY, config.SAME_THICKNESS);
         this.#initializeLineLengthSelector(config.LINE_LENGTH_CATEGORY, config.SAME_LENGTH);
@@ -188,20 +192,18 @@ export class FallingLines extends CanvasScreen {
     }
 
     #logFeatures(): void {
-        console.log('FallingLines:');
-
-        console.log(`  LINE_TOTAL: ${this.#lineTotal}`);
-
-        console.log(`  LINE_FILL_CATEGORY: ${this.#LINE_FILL}`);
-
-        console.log(`  THICKNESS_CATEGORY: ${FallingLines.#LINE_THICKNESS_SELECTOR.currentCategory}`);
-        console.log(`  SAME_THICKNESS: ${FallingLines.#LINE_THICKNESS_SELECTOR.sameChoice}`);
-
-        console.log(`  LINE_LENGTH_CATEGORY: ${FallingLines.#LINE_LENGTH_SELECTOR.currentCategory}`);
-        console.log(`  SAME_LENGTH: ${FallingLines.#LINE_LENGTH_SELECTOR.sameChoice}`);
-
-        console.log(`  LINE_TRANSPARENCY_CATEGORY: ${FallingLines.#LINE_TRANSPARENCY_SELECTOR.currentCategory}`);
-        console.log(`  SAME_TRANSPARENCY: ${FallingLines.#LINE_TRANSPARENCY_SELECTOR.sameChoice}`);
+        const properties = {
+            LINE_TOTAL: this.#lineTotal,
+            LINE_FILL_CATEGORY: this.#LINE_FILL,
+            THICKNESS_CATEGORY: FallingLines.#LINE_THICKNESS_SELECTOR.currentCategory,
+            SAME_THICKNESS: FallingLines.#LINE_THICKNESS_SELECTOR.sameChoice,
+            LINE_LENGTH_CATEGORY: FallingLines.#LINE_LENGTH_SELECTOR.currentCategory,
+            SAME_LENGTH: FallingLines.#LINE_LENGTH_SELECTOR.sameChoice,
+            LINE_TRANSPARENCY_CATEGORY: FallingLines.#LINE_TRANSPARENCY_SELECTOR.currentCategory,
+            SAME_TRANSPARENCY: FallingLines.#LINE_TRANSPARENCY_SELECTOR.sameChoice,
+            GRADIENT_RENDER: this.#GRADIENT_RENDER
+        }
+        console.log(properties);
     }
 
     #initializeLineThicknessSelector(category?: LineThickness, same?: boolean): void {
@@ -335,15 +337,17 @@ export class FallingLines extends CanvasScreen {
     // }
 
     #buildLine(start: Coordinate, end: Coordinate, strokeWeightMultiplier: number): Line {
-        const gradient: Gradient = new Gradient([
-            { color: new Color(255, 0, 0, 50), mapMax: CoordinateMapper.minY },
-            { color: new Color(0, 255, 0, 50), mapMax: CoordinateMapper.minY + (P5Context.p5.height * 0.25) },
-            { color: new Color(255, 255, 0, 50), mapMax: CoordinateMapper.minY + (P5Context.p5.height * 0.5) },
-            { color: new Color(0, 0, 255, 50), mapMax: CoordinateMapper.minY + (P5Context.p5.height * 0.75) },
-            { color: new Color(255, 0, 255, 50), mapMax: CoordinateMapper.minY + (P5Context.p5.height) }
+        const alpha: number = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
+        const gradient: MappedGradient = new MappedGradient([
+            { color: new Color(255, 0, 0, alpha), maxMapPercentage: 0 },
+            { color: new Color(0, 255, 0, alpha), maxMapPercentage: 0.25 },
+            { color: new Color(255, 255, 0, alpha), maxMapPercentage: 0.5 },
+            { color: new Color(0, 0, 255, alpha), maxMapPercentage: 0.75 },
+            { color: new Color(255, 0, 255, alpha), maxMapPercentage: 1.0 }
         ]);
 
-        return new GradientLine(start, end, strokeWeightMultiplier, gradient, 3);
+        return new VerticalGradientLine(start, end, strokeWeightMultiplier, gradient, this.#GRADIENT_RENDER, CoordinateMapper.minY, CoordinateMapper.maxY);
+        // return new VerticalGradientLine(start, end, strokeWeightMultiplier, gradient, this.#GRADIENT_RENDER);
     }
 
     #addLine(line: Line): void {

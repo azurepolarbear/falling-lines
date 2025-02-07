@@ -21,5 +21,5 @@
  * for full license details.
  */
 
-export * from './gradient-line';
+export * from './vertical-gradient-line';
 export * from './line';

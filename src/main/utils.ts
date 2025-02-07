@@ -51,4 +51,9 @@ function buildVector(coordinate: Coordinate, mode: CoordinateMode): P5Lib.Vector
     return P5Context.p5.createVector(coordinate.getX(mode), coordinate.getY(mode));
 }
 
-export { buildCoordinate, buildVector };
+function copyCoordinate(coordinate: Coordinate): Coordinate {
+    const mode: CoordinateMode = CoordinateMode.CANVAS;
+    return buildCoordinate(coordinate.getX(mode), coordinate.getY(mode), mode);
+}
+
+export { buildCoordinate, buildVector, copyCoordinate };
