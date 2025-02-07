@@ -50,6 +50,28 @@ interface Palette {
 }
 
 // TODO - selecting a high density makes it more likely to select a smaller thickness.
+// TODO - selecting a high density makes it more likely to select a higher transparency.
+// TODO - solid lines with gradient are drawn with a VERTICES render mode.
+
+// TODO - get 1 print/product output for each achieved goal
+
+// TODO - COLOR TYPES
+// - solid
+// - constant vertical window gradient (2 - n colors)
+// - constant vertical line gradient (2 - n colors)
+// - random vertical window gradient (2 - n colors)
+// - random vertical line gradient (2 - n colors)
+// - constant vertical window gradient (2 - n colors) changing over a horizontal gradient (2 color sets)
+// - constant vertical line gradient (2 - n colors) changing over a horizontal gradient (2 color sets)
+
+// TODO - COLOR SELECTION
+// 2 - n color selection in HexColorPalette
+// - 30 HexColor palettes
+// RGB Color Selector
+// HSB Color Selector
+  // Gradients built from HSB mapping
+// 20 batpb/genart palettes
+  // Gradients build from gradient palettes
 
 function sketch(p5: P5Lib): void {
     const LINE_DENSITY_SELECTOR: CategorySelector<LineDensity> = new CategorySelector<LineDensity>([
