@@ -41,7 +41,7 @@ import {
 } from '@batpb/genart';
 
 import {HexColorSelector} from './color';
-import {LineDensity, LineFill, LineLength, LineTrend} from './line-categories';
+import {LineDensity, LineFill, LineGradient, LineLength, LineTrend} from './line-categories';
 import {FallingLines, LinesConfig} from './falling-lines';
 import {CategorySelector} from './selector';
 import {LineRenderMode} from "./line";
@@ -58,9 +58,8 @@ interface HexPalette {
 // TODO - get 1 print/product output for each achieved goal
 
 // TODO - COLOR TYPES
-// - solid
-// - constant vertical window gradient (2 - n colors)
 // - constant vertical line gradient (2 - n colors)
+// - constant vertical max line length gradient (2 - n colors)
 // - random vertical window gradient (2 - n colors)
 // - random vertical line gradient (2 - n colors)
 // - constant vertical window gradient (2 - n colors) changing over a horizontal gradient (2 color sets)
@@ -127,10 +126,12 @@ function sketch(p5: P5Lib): void {
             LINE_TREND_CATEGORY: lineTrend,
             // LINE_TREND_CATEGORY: LineTrend.CONSTANT,
             COLOR_SELECTOR: selector,
-            LINE_LENGTH_CATEGORY: Random.randomElement([LineLength.FULL_SCREEN, LineLength.MEDIUM, LineLength.LONG]) ?? LineLength.FULL_SCREEN,
+            // LINE_LENGTH_CATEGORY: Random.randomElement([LineLength.FULL_SCREEN, LineLength.MEDIUM, LineLength.LONG]) ?? LineLength.FULL_SCREEN,
+            LINE_LENGTH_CATEGORY: LineLength.MIXED,
             // THICKNESS_CATEGORY: LineThickness.MIXED,
             GRADIENT_RENDER: Random.randomElement(Object.values(LineRenderMode)),
             // LINE_TRANSPARENCY_CATEGORY: LineTransparency.HIGH_TRANSPARENCY,
+            GRADIENT_TYPE: LineGradient.CONSTANT_MAX_LENGTH_GRADIENT
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);

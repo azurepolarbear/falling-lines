@@ -170,4 +170,15 @@ export class VerticalGradientLine extends Line {
             p5.endShape();
         }
     }
+
+    public override canvasRedraw(): void {
+        super.canvasRedraw();
+        for (const line of this.#SEGMENTS) {
+            line.canvasRedraw();
+        }
+
+        for (const vertex of this.#VERTICES) {
+            vertex.coordinate.remap();
+        }
+    }
 }
