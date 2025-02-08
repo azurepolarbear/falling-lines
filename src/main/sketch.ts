@@ -26,12 +26,14 @@ import P5Lib from 'p5';
 import '../../assets/styles/sketch.css';
 
 import {
+    ALL_PALETTES,
     ASPECT_RATIOS,
-    BRITTNI_PALETTE,
     CanvasContext,
     CanvasScreen,
     ColorSelector,
+    ColorSelectorManager,
     P5Context,
+    Palette,
     PaletteColorSelector,
     Random,
     Range,
@@ -44,7 +46,7 @@ import {FallingLines, LinesConfig} from './falling-lines';
 import {CategorySelector} from './selector';
 import {LineRenderMode} from "./line";
 
-interface Palette {
+interface HexPalette {
     name: string;
     colors: string[];
 }
@@ -80,7 +82,7 @@ function sketch(p5: P5Lib): void {
         { category: LineDensity.HIGH, range: new Range(25, 200) }
     ], false);
 
-    function buildPalettes(): Palette[] {
+    function buildPalettes(): HexPalette[] {
         return [
             { name: 'winter blues', colors: ['#dfebf1', '#a4c0df', '#7a9ec7', '#3e6589', '#052542'] },
             { name: 'winter calm', colors: ['#badaee', '#8cc2e3', '#61879e', '#b7bee1', '#dedede'] },
@@ -97,17 +99,19 @@ function sketch(p5: P5Lib): void {
     p5.setup = (): void => {
         P5Context.initialize(p5);
         CanvasContext.buildCanvas(ASPECT_RATIOS.SQUARE, 720, p5.WEBGL, true);
-        const palettes: Palette[] = buildPalettes();
-        const palette: Palette | undefined = Random.randomElement(palettes);
+        const palettes: HexPalette[] = buildPalettes();
+        const palette: HexPalette | undefined = Random.randomElement(palettes);
         let selector: ColorSelector;
 
-        if (palette) {
+        if (Random.randomBoolean() && palette) {
             selector = new HexColorSelector(true, palette.colors);
         } else {
-            selector = new PaletteColorSelector(BRITTNI_PALETTE);
+            const palettes: Palette[] = Array.from(ALL_PALETTES.values);
+            const selectors: ColorSelector[] = palettes.map((palette: Palette) => {return new PaletteColorSelector(palette)});
+            const selectorManager: ColorSelectorManager = new ColorSelectorManager();
+            selectorManager.addColorSelectors(selectors);
+            selector = selectorManager.getRandomColorSelector();
         }
-
-        selector = new HexColorSelector(false, ['#FF0000', '#FFFFFF']);
 
         LINE_DENSITY_SELECTOR.setRandomCategory();
 

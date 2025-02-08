@@ -32,11 +32,11 @@ export class Line implements CanvasRedrawListener {
     #colorA: Color;
     #colorB: Color;
 
-    public constructor(startCoordinate: Coordinate, endCoordinate: Coordinate, color: Color, strokeWeightMultiplier?: number) {
+    public constructor(startCoordinate: Coordinate, endCoordinate: Coordinate, strokeWeightMultiplier?: number, color?: Color) {
         this.#start = startCoordinate;
         this.#end = endCoordinate;
-        this.#colorA = color;
-        this.#colorB = color;
+        this.#colorA = color ?? new Color();
+        this.#colorB = color ?? new Color();
 
         if (strokeWeightMultiplier) {
             this.#strokeWeightMultiplier = strokeWeightMultiplier;

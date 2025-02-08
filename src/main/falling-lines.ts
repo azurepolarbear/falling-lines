@@ -38,9 +38,9 @@ import {
 } from '@batpb/genart';
 
 import {VerticalGradientLine, Line, LineRenderMode} from './line';
-import { LineFill, LineLength, LineThickness, LineTransparency, LineTrend } from './line-categories';
+import {LineFill, LineGradient, LineLength, LineThickness, LineTransparency, LineTrend} from './line-categories';
 import { CategorySelector } from './selector';
-import { MappedGradient } from './color';
+import {GradientStep, MappedGradient} from './color';
 
 export interface LinesConfig {
     readonly NAME: string;
@@ -60,6 +60,8 @@ export interface LinesConfig {
     readonly SAME_TRANSPARENCY?: boolean;
 
     readonly GRADIENT_RENDER?: LineRenderMode;
+
+    readonly GRADIENT_TYPE?: LineGradient;
 }
 
 export class FallingLines extends CanvasScreen {
@@ -96,6 +98,12 @@ export class FallingLines extends CanvasScreen {
     readonly #LINE_TREND: LineTrend;
     readonly #GRADIENT_RENDER: LineRenderMode;
 
+    readonly #GRADIENT_TYPE: LineGradient;
+    readonly #GRADIENT_SIZE: number;
+    readonly #GRADIENT_COLORS: Color[] = [];
+
+    readonly #COLOR_SELECTOR: ColorSelector;
+
     #lineTotal: number;
 
     public constructor(config: LinesConfig) {
@@ -104,7 +112,16 @@ export class FallingLines extends CanvasScreen {
         this.#lineTotal = config.LINE_TOTAL;
         this.#LINE_FILL = config.LINE_FILL_CATEGORY;
         this.#LINE_TREND = config.LINE_TREND_CATEGORY;
-        this.#GRADIENT_RENDER = config.GRADIENT_RENDER ?? LineRenderMode.VERTICES;
+        this.#COLOR_SELECTOR = config.COLOR_SELECTOR;
+
+        this.#GRADIENT_RENDER = config.GRADIENT_RENDER ?? Random.randomElement(Object.values(LineRenderMode)) ?? LineRenderMode.VERTICES;
+        this.#GRADIENT_TYPE = config.GRADIENT_TYPE ?? Random.randomElement(Object.values(LineGradient)) ?? LineGradient.SOLID;
+
+        this.#GRADIENT_SIZE = Random.randomInt(2, 10);
+
+        for (let i: number = 0; i < this.#GRADIENT_SIZE; i++) {
+            this.#GRADIENT_COLORS.push(this.#COLOR_SELECTOR.getColor());
+        }
 
         this.#initializeLineThicknessSelector(config.THICKNESS_CATEGORY, config.SAME_THICKNESS);
         this.#initializeLineLengthSelector(config.LINE_LENGTH_CATEGORY, config.SAME_LENGTH);
@@ -201,7 +218,10 @@ export class FallingLines extends CanvasScreen {
             SAME_LENGTH: FallingLines.#LINE_LENGTH_SELECTOR.sameChoice,
             LINE_TRANSPARENCY_CATEGORY: FallingLines.#LINE_TRANSPARENCY_SELECTOR.currentCategory,
             SAME_TRANSPARENCY: FallingLines.#LINE_TRANSPARENCY_SELECTOR.sameChoice,
-            GRADIENT_RENDER: this.#GRADIENT_RENDER
+            GRADIENT_RENDER: this.#GRADIENT_RENDER,
+            GRADIENT_TYPE: this.#GRADIENT_TYPE,
+            GRADIENT_SIZE: this.#GRADIENT_SIZE,
+            GRADIENT_COLORS: this.#GRADIENT_COLORS
         }
         console.log(properties);
     }
@@ -268,20 +288,7 @@ export class FallingLines extends CanvasScreen {
 
         for (let i = 0; i < this.lineTotal; i++) {
             const x: number = ((i + 1) * spaceX) + FallingLines.MIN_X;
-            length = this.#getLineLength(x);
-
-            const startY: number = FallingLines.MIN_Y;
-            const endY: number = startY + length;
-
-            const start: Coordinate = new Coordinate();
-            start.setPosition(new P5Lib.Vector(x, startY), CoordinateMode.CANVAS);
-
-            const end: Coordinate = new Coordinate();
-            end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
-
-            // const color: Color = this.#getLineColor();
-            const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
-            this.#addLine(this.#buildLine(start, end, thickness));
+            this.#addLine(this.#buildLine(x));
         }
     }
 
@@ -293,20 +300,18 @@ export class FallingLines extends CanvasScreen {
         let total: number = 0;
 
         while (x < CoordinateMapper.maxX) {
-            length = this.#getLineLength(x);
-            const startY: number = FallingLines.MIN_Y;
-            const endY: number = startY + length;
-
-            const start: Coordinate = new Coordinate();
-            start.setPosition(new P5Lib.Vector(x, startY), CoordinateMode.CANVAS);
-
-            const end: Coordinate = new Coordinate();
-            end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
-
-            // const color: Color = this.#getLineColor();
-
-            const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
-            this.#addLine(this.#buildLine(start, end, thickness));
+            // length = this.#getLineLength(x);
+            // const startY: number = FallingLines.MIN_Y;
+            // const endY: number = startY + length;
+            //
+            // const start: Coordinate = new Coordinate();
+            // start.setPosition(new P5Lib.Vector(x, startY), CoordinateMode.CANVAS);
+            //
+            // const end: Coordinate = new Coordinate();
+            // end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
+            //
+            // const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
+            this.#addLine(this.#buildLine(x));
 
             x += Random.randomFloat(spaceX * 0.1, spaceX * 1.5);
             total++;
@@ -330,24 +335,68 @@ export class FallingLines extends CanvasScreen {
         return length;
     }
 
-    // #getLineColor(): Color {
-    //     const color: Color = this.#COLOR_SELECTOR.getColor();
-    //     color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
-    //     return color;
+    // #buildLine(start: Coordinate, end: Coordinate, strokeWeightMultiplier: number): Line {
+    //     if (this.#GRADIENT_TYPE === LineGradient.SOLID) {
+    //         const color: Color = this.#COLOR_SELECTOR.getColor();
+    //         color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
+    //         return new Line(start, end, strokeWeightMultiplier, color);
+    //     } else {
+    //         let gradientStart: number = CoordinateMapper.minY
+    //         let gradientEnd: number = CoordinateMapper.maxY;
+    //
+    //         if (this.#GRADIENT_TYPE === LineGradient.CONSTANT_LINE_LENGTH_GRADIENT) {
+    //             gradientStart = start.getY(CoordinateMode.CANVAS);
+    //             gradientEnd = end.getY(CoordinateMode.CANVAS);
+    //         }
+    //
+    //         const gradient: MappedGradient = this.#buildGradient(this.#GRADIENT_COLORS);
+    //
+    //         return new VerticalGradientLine(start, end, strokeWeightMultiplier, gradient, this.#GRADIENT_RENDER, gradientStart, gradientEnd);
+    //     }
     // }
 
-    #buildLine(start: Coordinate, end: Coordinate, strokeWeightMultiplier: number): Line {
-        const alpha: number = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
-        const gradient: MappedGradient = new MappedGradient([
-            { color: new Color(255, 0, 0, alpha), maxMapPercentage: 0 },
-            { color: new Color(0, 255, 0, alpha), maxMapPercentage: 0.25 },
-            { color: new Color(255, 255, 0, alpha), maxMapPercentage: 0.5 },
-            { color: new Color(0, 0, 255, alpha), maxMapPercentage: 0.75 },
-            { color: new Color(255, 0, 255, alpha), maxMapPercentage: 1.0 }
-        ]);
+    #buildLine(x: number): Line {
+        length = this.#getLineLength(x);
 
-        return new VerticalGradientLine(start, end, strokeWeightMultiplier, gradient, this.#GRADIENT_RENDER, CoordinateMapper.minY, CoordinateMapper.maxY);
-        // return new VerticalGradientLine(start, end, strokeWeightMultiplier, gradient, this.#GRADIENT_RENDER);
+        const startY: number = FallingLines.MIN_Y;
+        const endY: number = startY + length;
+
+        const start: Coordinate = new Coordinate();
+        start.setPosition(new P5Lib.Vector(x, startY), CoordinateMode.CANVAS);
+
+        const end: Coordinate = new Coordinate();
+        end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
+
+        const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
+
+        if (this.#GRADIENT_TYPE === LineGradient.SOLID) {
+            const color: Color = this.#COLOR_SELECTOR.getColor();
+            color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
+            return new Line(start, end, thickness, color);
+        } else {
+            let gradientStart: number = CoordinateMapper.minY
+            let gradientEnd: number = CoordinateMapper.maxY;
+
+            if (this.#GRADIENT_TYPE === LineGradient.CONSTANT_LINE_LENGTH_GRADIENT) {
+                gradientStart = start.getY(CoordinateMode.CANVAS);
+                gradientEnd = end.getY(CoordinateMode.CANVAS);
+            }
+
+            const gradient: MappedGradient = this.#buildGradient(this.#GRADIENT_COLORS);
+
+            return new VerticalGradientLine(start, end, thickness, gradient, this.#GRADIENT_RENDER, gradientStart, gradientEnd);
+        }
+    }
+
+    #buildGradient(colors: Color[]): MappedGradient {
+        const steps: GradientStep[] = [];
+
+        colors.forEach((color: Color, index: number): void => {
+            color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
+            steps.push({ color: color, maxMapPercentage: index / (colors.length - 1) });
+        });
+
+        return new MappedGradient(steps);
     }
 
     #addLine(line: Line): void {

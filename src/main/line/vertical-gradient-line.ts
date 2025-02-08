@@ -57,7 +57,7 @@ export class VerticalGradientLine extends Line {
                        minGradientY?: number,
                        maxGradientY?: number
     ) {
-        super(startCoordinate, endCoordinate, new Color(255, 0, 0), strokeWeightMultiplier);
+        super(startCoordinate, endCoordinate, strokeWeightMultiplier);
         const p5 = P5Context.p5;
 
         if (renderMode === LineRenderMode.RANDOM) {
@@ -119,8 +119,8 @@ export class VerticalGradientLine extends Line {
                 const segment: Line = new Line(
                     buildCoordinate(segmentStart, mode),
                     buildCoordinate(end, mode),
-                    gradient.getColor(startGradientPercentage),
-                    strokeWeightMultiplier);
+                    strokeWeightMultiplier,
+                    gradient.getColor(startGradientPercentage),);
                 segment.colorB = gradient.getColor(gradientEndPercentage);
                 this.#SEGMENTS.push(segment);
 
@@ -134,8 +134,8 @@ export class VerticalGradientLine extends Line {
                 const segment: Line = new Line(
                     buildCoordinate(segmentStart, mode),
                     buildCoordinate(end, mode),
-                    gradient.getColor(startGradientPercentage),
-                    strokeWeightMultiplier);
+                    strokeWeightMultiplier,
+                    gradient.getColor(startGradientPercentage));
                 segment.colorB = gradient.getColor(percentage);
                 this.#SEGMENTS.push(segment);
 

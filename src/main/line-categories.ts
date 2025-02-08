@@ -94,9 +94,9 @@ export enum LineTransparency {
 
 export enum LineGradient {
     SOLID = 'solid',
-    WINDOW_GRADIENT = 'window-gradient',
-    LINE_LENGTH_GRADIENT = 'line-length-gradient',
-    MAX_LENGTH_GRADIENT = 'max-length-gradient'
+    CONSTANT_WINDOW_GRADIENT = 'constant-window-gradient',
+    CONSTANT_LINE_LENGTH_GRADIENT = 'constant-line-length-gradient',
+    CONSTANT_MAX_LENGTH_GRADIENT = 'constant-max-length-gradient'
 }
 
 export enum ColorLayout {
