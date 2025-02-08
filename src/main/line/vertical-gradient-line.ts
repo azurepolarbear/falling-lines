@@ -44,11 +44,14 @@ export interface GradientLineConfig {
 
 export class VerticalGradientLine extends Line {
     readonly #SEGMENTS: Line[] = [];
-
     readonly #VERTICES: {coordinate: Coordinate, color: Color}[] = [];
     readonly #RENDER_MODE: LineRenderMode;
 
-    // TODO - clean up constructor logic?
+    readonly #GRADIENT: MappedGradient;
+
+    #minGradientY: number = 0;
+    #maxGradientY: number = 0;
+
     public constructor(startCoordinate: Coordinate,
                        endCoordinate: Coordinate,
                        strokeWeightMultiplier: number,
@@ -58,7 +61,6 @@ export class VerticalGradientLine extends Line {
                        maxGradientY?: number
     ) {
         super(startCoordinate, endCoordinate, strokeWeightMultiplier);
-        const p5 = P5Context.p5;
 
         if (renderMode === LineRenderMode.RANDOM) {
             if (Random.randomBoolean()) {
@@ -73,77 +75,12 @@ export class VerticalGradientLine extends Line {
         const mode: CoordinateMode = CoordinateMode.CANVAS;
         const lineStart: P5Lib.Vector = buildVector(startCoordinate, mode);
         const lineEnd: P5Lib.Vector = buildVector(endCoordinate, mode);
-        const segmentStart: P5Lib.Vector = lineStart.copy();
-        const x: number = lineStart.x;
 
-        if (minGradientY === undefined) {
-            minGradientY = lineStart.y;
-        }
+        this.#GRADIENT = gradient;
+        this.#minGradientY = minGradientY ?? lineStart.y;
+        this.#maxGradientY = maxGradientY ?? lineEnd.y;
 
-        if (maxGradientY === undefined) {
-            maxGradientY = lineEnd.y;
-        }
-
-        let isComplete: boolean = false;
-        let gradientStepIndex: number = 0;
-
-        let startGradientPercentage: number = p5.map(segmentStart.y, minGradientY, maxGradientY, 0, 1);
-        this.#VERTICES.push({ coordinate: buildCoordinate(segmentStart, mode), color: gradient.getColor(startGradientPercentage) });
-
-        while (!isComplete) {
-            let gradientEndPercentage: number | undefined = gradient.getMapMaxPercentage(gradientStepIndex);
-
-            if (gradientEndPercentage === undefined) {
-                isComplete = true;
-                break;
-            }
-
-            let gradientEndY: number = p5.map(gradientEndPercentage, 0, 1, minGradientY, maxGradientY);
-
-            if (segmentStart.y >= gradientEndY) {
-                gradientStepIndex++;
-                gradientEndPercentage = gradient.getMapMaxPercentage(gradientStepIndex);
-
-                if (gradientEndPercentage === undefined) {
-                    isComplete = true;
-                    break;
-                }
-
-                gradientEndY = p5.map(gradientEndPercentage, 0, 1, minGradientY, maxGradientY);
-            }
-
-            if (gradientEndY < lineEnd.y) {
-                const end: P5Lib.Vector = p5.createVector(x, gradientEndY);
-                this.#VERTICES.push({ coordinate: buildCoordinate(end, mode), color: gradient.getColor(gradientEndPercentage) });
-
-                const segment: Line = new Line(
-                    buildCoordinate(segmentStart, mode),
-                    buildCoordinate(end, mode),
-                    strokeWeightMultiplier,
-                    gradient.getColor(startGradientPercentage),);
-                segment.colorB = gradient.getColor(gradientEndPercentage);
-                this.#SEGMENTS.push(segment);
-
-                segmentStart.set(end.x, end.y);
-                startGradientPercentage = p5.map(segmentStart.y, minGradientY, maxGradientY, 0, 1);
-            } else {
-                const end: P5Lib.Vector = lineEnd.copy();
-                const percentage: number = p5.map(end.y, minGradientY, maxGradientY, 0, 1);
-                this.#VERTICES.push({ coordinate: buildCoordinate(end, mode), color: gradient.getColor(percentage) });
-
-                const segment: Line = new Line(
-                    buildCoordinate(segmentStart, mode),
-                    buildCoordinate(end, mode),
-                    strokeWeightMultiplier,
-                    gradient.getColor(startGradientPercentage));
-                segment.colorB = gradient.getColor(percentage);
-                this.#SEGMENTS.push(segment);
-
-                segmentStart.set(end.x, end.y);
-                startGradientPercentage = p5.map(segmentStart.y, minGradientY, maxGradientY, 0, 1);
-                isComplete = true;
-            }
-        }
+        this.#build();
     }
 
     public override draw(): void {
@@ -179,6 +116,84 @@ export class VerticalGradientLine extends Line {
 
         for (const vertex of this.#VERTICES) {
             vertex.coordinate.remap();
+        }
+    }
+
+    public updateMaxGradientY(maxGradientY: number): void {
+        this.#maxGradientY = maxGradientY;
+        this.#build();
+    }
+
+    #build(): void {
+        this.#SEGMENTS.splice(0);
+        this.#VERTICES.splice(0);
+
+        const mode: CoordinateMode = CoordinateMode.CANVAS;
+        const p5: P5Lib = P5Context.p5;
+        const lineStart: P5Lib.Vector = buildVector(this.start, mode);
+        const lineEnd: P5Lib.Vector = buildVector(this.end, mode);
+        const segmentStart: P5Lib.Vector = lineStart.copy();
+        const x: number = lineStart.x;
+
+        let isComplete: boolean = false;
+        let gradientStepIndex: number = 0;
+
+        let startGradientPercentage: number = p5.map(segmentStart.y, this.#minGradientY, this.#maxGradientY, 0, 1);
+        this.#VERTICES.push({ coordinate: buildCoordinate(segmentStart, mode), color: this.#GRADIENT.getColor(startGradientPercentage) });
+
+        while (!isComplete) {
+            let gradientEndPercentage: number | undefined = this.#GRADIENT.getMapMaxPercentage(gradientStepIndex);
+
+            if (gradientEndPercentage === undefined) {
+                isComplete = true;
+                break;
+            }
+
+            let gradientEndY: number = p5.map(gradientEndPercentage, 0, 1, this.#minGradientY, this.#maxGradientY);
+
+            if (segmentStart.y >= gradientEndY) {
+                gradientStepIndex++;
+                gradientEndPercentage = this.#GRADIENT.getMapMaxPercentage(gradientStepIndex);
+
+                if (gradientEndPercentage === undefined) {
+                    isComplete = true;
+                    break;
+                }
+
+                gradientEndY = p5.map(gradientEndPercentage, 0, 1, this.#minGradientY, this.#maxGradientY);
+            }
+
+            if (gradientEndY < lineEnd.y) {
+                const end: P5Lib.Vector = p5.createVector(x, gradientEndY);
+                this.#VERTICES.push({ coordinate: buildCoordinate(end, mode), color: this.#GRADIENT.getColor(gradientEndPercentage) });
+
+                const segment: Line = new Line(
+                    buildCoordinate(segmentStart, mode),
+                    buildCoordinate(end, mode),
+                    this.strokeWeightMultiplier,
+                    this.#GRADIENT.getColor(startGradientPercentage),);
+                segment.colorB = this.#GRADIENT.getColor(gradientEndPercentage);
+                this.#SEGMENTS.push(segment);
+
+                segmentStart.set(end.x, end.y);
+                startGradientPercentage = p5.map(segmentStart.y, this.#minGradientY, this.#maxGradientY, 0, 1);
+            } else {
+                const end: P5Lib.Vector = lineEnd.copy();
+                const percentage: number = p5.map(end.y, this.#minGradientY, this.#maxGradientY, 0, 1);
+                this.#VERTICES.push({ coordinate: buildCoordinate(end, mode), color: this.#GRADIENT.getColor(percentage) });
+
+                const segment: Line = new Line(
+                    buildCoordinate(segmentStart, mode),
+                    buildCoordinate(end, mode),
+                    this.strokeWeightMultiplier,
+                    this.#GRADIENT.getColor(startGradientPercentage));
+                segment.colorB = this.#GRADIENT.getColor(percentage);
+                this.#SEGMENTS.push(segment);
+
+                segmentStart.set(end.x, end.y);
+                startGradientPercentage = p5.map(segmentStart.y, this.#minGradientY, this.#maxGradientY, 0, 1);
+                isComplete = true;
+            }
         }
     }
 }

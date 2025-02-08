@@ -51,6 +51,14 @@ export class Line implements CanvasRedrawListener {
         this.#colorB = color;
     }
 
+    protected get start(): Coordinate {
+        return this.#start;
+    }
+
+    protected get end(): Coordinate {
+        return this.#end;
+    }
+
     protected get strokeWeightMultiplier(): number {
         return this.#strokeWeightMultiplier;
     }

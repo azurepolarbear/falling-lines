@@ -106,9 +106,10 @@ export class FallingLines extends CanvasScreen {
 
     #lineTotal: number;
 
+    #maxLineY: number = Number.MIN_SAFE_INTEGER;
+
     public constructor(config: LinesConfig) {
         super(config.NAME);
-        // this.#COLOR_SELECTOR = config.COLOR_SELECTOR;
         this.#lineTotal = config.LINE_TOTAL;
         this.#LINE_FILL = config.LINE_FILL_CATEGORY;
         this.#LINE_TREND = config.LINE_TREND_CATEGORY;
@@ -277,7 +278,16 @@ export class FallingLines extends CanvasScreen {
                 this.#buildRandomOverlapLines();
                 break;
             default:
+                this.#buildEvenOverlapLines();
                 break;
+        }
+
+        if (this.#GRADIENT_TYPE === LineGradient.CONSTANT_MAX_LENGTH_GRADIENT) {
+            for (const line of this.#LINES) {
+                if (line instanceof VerticalGradientLine) {
+                    line.updateMaxGradientY(this.#maxLineY);
+                }
+            }
         }
     }
 
@@ -300,19 +310,7 @@ export class FallingLines extends CanvasScreen {
         let total: number = 0;
 
         while (x < CoordinateMapper.maxX) {
-            // length = this.#getLineLength(x);
-            // const startY: number = FallingLines.MIN_Y;
-            // const endY: number = startY + length;
-            //
-            // const start: Coordinate = new Coordinate();
-            // start.setPosition(new P5Lib.Vector(x, startY), CoordinateMode.CANVAS);
-            //
-            // const end: Coordinate = new Coordinate();
-            // end.setPosition(new P5Lib.Vector(x, endY), CoordinateMode.CANVAS);
-            //
-            // const thickness: number = FallingLines.#LINE_THICKNESS_SELECTOR.getChoice();
             this.#addLine(this.#buildLine(x));
-
             x += Random.randomFloat(spaceX * 0.1, spaceX * 1.5);
             total++;
         }
@@ -335,31 +333,13 @@ export class FallingLines extends CanvasScreen {
         return length;
     }
 
-    // #buildLine(start: Coordinate, end: Coordinate, strokeWeightMultiplier: number): Line {
-    //     if (this.#GRADIENT_TYPE === LineGradient.SOLID) {
-    //         const color: Color = this.#COLOR_SELECTOR.getColor();
-    //         color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
-    //         return new Line(start, end, strokeWeightMultiplier, color);
-    //     } else {
-    //         let gradientStart: number = CoordinateMapper.minY
-    //         let gradientEnd: number = CoordinateMapper.maxY;
-    //
-    //         if (this.#GRADIENT_TYPE === LineGradient.CONSTANT_LINE_LENGTH_GRADIENT) {
-    //             gradientStart = start.getY(CoordinateMode.CANVAS);
-    //             gradientEnd = end.getY(CoordinateMode.CANVAS);
-    //         }
-    //
-    //         const gradient: MappedGradient = this.#buildGradient(this.#GRADIENT_COLORS);
-    //
-    //         return new VerticalGradientLine(start, end, strokeWeightMultiplier, gradient, this.#GRADIENT_RENDER, gradientStart, gradientEnd);
-    //     }
-    // }
-
     #buildLine(x: number): Line {
         length = this.#getLineLength(x);
 
         const startY: number = FallingLines.MIN_Y;
         const endY: number = startY + length;
+
+        this.#maxLineY = Math.max(this.#maxLineY, endY);
 
         const start: Coordinate = new Coordinate();
         start.setPosition(new P5Lib.Vector(x, startY), CoordinateMode.CANVAS);
