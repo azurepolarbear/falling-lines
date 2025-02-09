@@ -37,10 +37,10 @@ import {
     Range
 } from '@batpb/genart';
 
-import {VerticalGradientLine, Line, LineRenderMode} from './line';
-import {LineFill, LineGradient, LineLength, LineThickness, LineTransparency, LineTrend} from './line-categories';
+import { VerticalGradientLine, Line, LineRenderMode } from './line';
+import { LineFill, LineGradient, LineLength, LineThickness, LineTransparency, LineTrend } from './line-categories';
+import { GradientStep, MappedGradient } from './color';
 import { CategorySelector } from './selector';
-import {GradientStep, MappedGradient} from './color';
 
 export interface LinesConfig {
     readonly NAME: string;
@@ -223,7 +223,8 @@ export class FallingLines extends CanvasScreen {
             GRADIENT_TYPE: this.#GRADIENT_TYPE,
             GRADIENT_SIZE: this.#GRADIENT_SIZE,
             GRADIENT_COLORS: this.#GRADIENT_COLORS
-        }
+        };
+
         console.log(properties);
     }
 
@@ -354,7 +355,7 @@ export class FallingLines extends CanvasScreen {
             color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
             return new Line(start, end, thickness, color);
         } else {
-            let gradientStart: number = CoordinateMapper.minY
+            let gradientStart: number = CoordinateMapper.minY;
             let gradientEnd: number = CoordinateMapper.maxY;
 
             if (this.#GRADIENT_TYPE === LineGradient.CONSTANT_LINE_LENGTH_GRADIENT) {

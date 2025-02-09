@@ -40,10 +40,10 @@ import {
     ScreenHandler
 } from '@batpb/genart';
 
-import {HexColorSelector} from './color';
-import {LineDensity, LineFill, LineTrend} from './line-categories';
-import {FallingLines, LinesConfig} from './falling-lines';
-import {CategorySelector} from './selector';
+import { HexColorSelector } from './color';
+import { FallingLines, LinesConfig } from './falling-lines';
+import { LineDensity, LineFill, LineTrend } from './line-categories';
+import { CategorySelector } from './selector';
 
 interface HexPalette {
     name: string;
@@ -69,9 +69,9 @@ interface HexPalette {
 // - 30 HexColor palettes
 // RGB Color Selector
 // HSB Color Selector
-  // Gradients built from HSB mapping
+//   Gradients built from HSB mapping
 // 20 batpb/genart palettes
-  // Gradients build from gradient palettes
+//   Gradients build from gradient palettes
 
 function sketch(p5: P5Lib): void {
     const LINE_DENSITY_SELECTOR: CategorySelector<LineDensity> = new CategorySelector<LineDensity>([
@@ -97,15 +97,17 @@ function sketch(p5: P5Lib): void {
     p5.setup = (): void => {
         P5Context.initialize(p5);
         CanvasContext.buildCanvas(ASPECT_RATIOS.SQUARE, 720, p5.WEBGL, true);
-        const palettes: HexPalette[] = buildPalettes();
-        const palette: HexPalette | undefined = Random.randomElement(palettes);
+        const hexPalettes: HexPalette[] = buildPalettes();
+        const hexPalette: HexPalette | undefined = Random.randomElement(hexPalettes);
         let selector: ColorSelector;
 
-        if (Random.randomBoolean() && palette) {
-            selector = new HexColorSelector(true, palette.colors);
+        if (Random.randomBoolean() && hexPalette) {
+            selector = new HexColorSelector(true, hexPalette.colors);
         } else {
             const palettes: Palette[] = Array.from(ALL_PALETTES.values);
-            const selectors: ColorSelector[] = palettes.map((palette: Palette) => {return new PaletteColorSelector(palette)});
+            const selectors: ColorSelector[] = palettes.map((palette: Palette) => {
+                return new PaletteColorSelector(palette);
+            });
             const selectorManager: ColorSelectorManager = new ColorSelectorManager();
             selectorManager.addColorSelectors(selectors);
             selector = selectorManager.getRandomColorSelector();
@@ -124,7 +126,7 @@ function sketch(p5: P5Lib): void {
             // LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP,
             LINE_TREND_CATEGORY: lineTrend,
             // LINE_TREND_CATEGORY: LineTrend.CONSTANT,
-            COLOR_SELECTOR: selector,
+            COLOR_SELECTOR: selector
             // LINE_LENGTH_CATEGORY: Random.randomElement([LineLength.FULL_SCREEN, LineLength.MEDIUM, LineLength.LONG]) ?? LineLength.FULL_SCREEN,
             // LINE_LENGTH_CATEGORY: LineLength.SHORT,
             // THICKNESS_CATEGORY: LineThickness.MIXED,

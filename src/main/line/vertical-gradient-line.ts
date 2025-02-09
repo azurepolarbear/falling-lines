@@ -44,7 +44,7 @@ export interface GradientLineConfig {
 
 export class VerticalGradientLine extends Line {
     readonly #SEGMENTS: Line[] = [];
-    readonly #VERTICES: {coordinate: Coordinate, color: Color}[] = [];
+    readonly #VERTICES: { coordinate: Coordinate; color: Color; }[] = [];
     readonly #RENDER_MODE: LineRenderMode;
 
     readonly #GRADIENT: MappedGradient;
@@ -145,7 +145,6 @@ export class VerticalGradientLine extends Line {
             let gradientEndPercentage: number | undefined = this.#GRADIENT.getMapMaxPercentage(gradientStepIndex);
 
             if (gradientEndPercentage === undefined) {
-                isComplete = true;
                 break;
             }
 
@@ -156,7 +155,6 @@ export class VerticalGradientLine extends Line {
                 gradientEndPercentage = this.#GRADIENT.getMapMaxPercentage(gradientStepIndex);
 
                 if (gradientEndPercentage === undefined) {
-                    isComplete = true;
                     break;
                 }
 
@@ -171,7 +169,7 @@ export class VerticalGradientLine extends Line {
                     buildCoordinate(segmentStart, mode),
                     buildCoordinate(end, mode),
                     this.strokeWeightMultiplier,
-                    this.#GRADIENT.getColor(startGradientPercentage),);
+                    this.#GRADIENT.getColor(startGradientPercentage));
                 segment.colorB = this.#GRADIENT.getColor(gradientEndPercentage);
                 this.#SEGMENTS.push(segment);
 
