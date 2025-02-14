@@ -123,7 +123,7 @@ export class FallingLines extends CanvasScreen {
         this.#GRADIENT_RENDER = config.GRADIENT_RENDER ?? Random.randomElement(Object.values(LineRenderMode)) ?? LineRenderMode.VERTICES;
         this.#GRADIENT_TYPE = config.GRADIENT_TYPE ?? Random.randomElement(Object.values(LineGradient)) ?? LineGradient.SOLID;
 
-        this.#GRADIENT_SIZE = config.GRADIENT_SIZE ?? Random.randomInt(2, 10);
+        this.#GRADIENT_SIZE = config.GRADIENT_SIZE ?? Random.randomInt(2, 5);
 
         for (let i: number = 0; i < this.#GRADIENT_SIZE; i++) {
             this.#GRADIENT_COLORS.push(this.#COLOR_SELECTOR.getColor());
@@ -230,7 +230,8 @@ export class FallingLines extends CanvasScreen {
             GRADIENT_RENDER: this.#GRADIENT_RENDER,
             GRADIENT_TYPE: this.#GRADIENT_TYPE,
             GRADIENT_SIZE: this.#GRADIENT_SIZE,
-            GRADIENT_COLORS: this.#GRADIENT_COLORS
+            GRADIENT_COLORS: this.#GRADIENT_COLORS,
+            EVEN_GRADIENT: this.#evenGradient
         };
 
         console.log(properties);

@@ -50,6 +50,8 @@ interface HexPalette {
     colors: string[];
 }
 
+// Possible new name: parallel lines
+
 // TODO - selecting a high density makes it more likely to select a smaller thickness.
 // TODO - selecting a high density makes it more likely to select a higher transparency.
 // TODO - solid lines with gradient are drawn with a VERTICES render mode.
@@ -117,7 +119,7 @@ function sketch(p5: P5Lib): void {
 
         const lineFill: LineFill = Random.randomElement([LineFill.EVEN_OVERLAP, LineFill.RANDOM_OVERLAP]) ?? LineFill.EVEN_OVERLAP;
         const lineTrend: LineTrend = Random.randomElement(Object.values(LineTrend)) ?? LineTrend.CONSTANT;
-        console.log(lineTrend);
+        // console.log(lineTrend);
 
         const config: LinesConfig = {
             NAME: 'Falling Lines',
@@ -125,8 +127,8 @@ function sketch(p5: P5Lib): void {
             // LINE_TOTAL: 25,
             LINE_FILL_CATEGORY: lineFill,
             // LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP,
-            // LINE_TREND_CATEGORY: lineTrend,
-            LINE_TREND_CATEGORY: LineTrend.CONSTANT,
+            LINE_TREND_CATEGORY: lineTrend,
+            // LINE_TREND_CATEGORY: LineTrend.CONSTANT,
             COLOR_SELECTOR: selector,
             // LINE_LENGTH_CATEGORY: Random.randomElement([LineLength.FULL_SCREEN, LineLength.MEDIUM, LineLength.LONG]) ?? LineLength.FULL_SCREEN,
             // LINE_LENGTH_CATEGORY: LineLength.LONG,
