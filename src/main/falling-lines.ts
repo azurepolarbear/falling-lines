@@ -62,6 +62,8 @@ export interface LinesConfig {
     readonly GRADIENT_RENDER?: LineRenderMode;
 
     readonly GRADIENT_TYPE?: LineGradient;
+    readonly GRADIENT_SIZE?: number;
+    readonly EVEN_GRADIENT?: boolean;
 }
 
 export class FallingLines extends CanvasScreen {
@@ -108,6 +110,9 @@ export class FallingLines extends CanvasScreen {
 
     #maxLineY: number = Number.MIN_SAFE_INTEGER;
 
+    #evenGradient: boolean;
+    #gradient: MappedGradient;
+
     public constructor(config: LinesConfig) {
         super(config.NAME);
         this.#lineTotal = config.LINE_TOTAL;
@@ -118,11 +123,14 @@ export class FallingLines extends CanvasScreen {
         this.#GRADIENT_RENDER = config.GRADIENT_RENDER ?? Random.randomElement(Object.values(LineRenderMode)) ?? LineRenderMode.VERTICES;
         this.#GRADIENT_TYPE = config.GRADIENT_TYPE ?? Random.randomElement(Object.values(LineGradient)) ?? LineGradient.SOLID;
 
-        this.#GRADIENT_SIZE = Random.randomInt(2, 10);
+        this.#GRADIENT_SIZE = config.GRADIENT_SIZE ?? Random.randomInt(2, 10);
 
         for (let i: number = 0; i < this.#GRADIENT_SIZE; i++) {
             this.#GRADIENT_COLORS.push(this.#COLOR_SELECTOR.getColor());
         }
+
+        this.#evenGradient = config.EVEN_GRADIENT ?? Random.randomBoolean();
+        this.#gradient = this.#buildGradient(this.#GRADIENT_COLORS);
 
         this.#initializeLineThicknessSelector(config.THICKNESS_CATEGORY, config.SAME_THICKNESS);
         this.#initializeLineLengthSelector(config.LINE_LENGTH_CATEGORY, config.SAME_LENGTH);
@@ -363,7 +371,16 @@ export class FallingLines extends CanvasScreen {
                 gradientEnd = end.getY(CoordinateMode.CANVAS);
             }
 
-            const gradient: MappedGradient = this.#buildGradient(this.#GRADIENT_COLORS);
+            let gradient: MappedGradient;
+
+            if (this.#GRADIENT_TYPE === LineGradient.CONSTANT_MAX_LENGTH_GRADIENT ||
+                this.#GRADIENT_TYPE === LineGradient.CONSTANT_WINDOW_GRADIENT ||
+                this.#GRADIENT_TYPE === LineGradient.CONSTANT_LINE_LENGTH_GRADIENT
+            ) {
+                gradient = this.#gradient;
+            } else {
+                gradient = this.#buildGradient(this.#GRADIENT_COLORS);
+            }
 
             return new VerticalGradientLine(start, end, thickness, gradient, this.#GRADIENT_RENDER, gradientStart, gradientEnd);
         }
@@ -372,11 +389,33 @@ export class FallingLines extends CanvasScreen {
     #buildGradient(colors: Color[]): MappedGradient {
         const steps: GradientStep[] = [];
 
-        colors.forEach((color: Color, index: number): void => {
-            color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
-            steps.push({ color: color, maxMapPercentage: index / (colors.length - 1) });
-        });
+        if (this.#evenGradient) {
+            colors.forEach((color: Color, index: number): void => {
+                color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
+                steps.push({ color: color, maxMapPercentage: index / (colors.length - 1) });
+            });
+        } else {
+            const maxPercent: number = 1.0 / (colors.length - 1);
+            const minPercent: number = maxPercent * 0.5;
+            let percent: number = 0;
+            let index: number = 0;
+            
 
+            while (percent < 1.0) {
+                if (1.0 - percent < minPercent) {
+                    percent = 1.0;
+                }
+
+                const color: Color = colors[index];
+                color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
+                steps.push({ color: color, maxMapPercentage: percent });
+
+                index = (index + 1) % colors.length;
+                percent += Random.randomFloat(minPercent, maxPercent);
+            }
+        }
+
+        console.log(steps);
         return new MappedGradient(steps);
     }
 

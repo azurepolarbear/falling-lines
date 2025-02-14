@@ -96,7 +96,7 @@ function sketch(p5: P5Lib): void {
 
     p5.setup = (): void => {
         P5Context.initialize(p5);
-        CanvasContext.buildCanvas(ASPECT_RATIOS.SQUARE, 720, p5.WEBGL, true);
+        CanvasContext.buildCanvas(ASPECT_RATIOS.SQUARE, 1080, p5.WEBGL, true);
         const hexPalettes: HexPalette[] = buildPalettes();
         const hexPalette: HexPalette | undefined = Random.randomElement(hexPalettes);
         let selector: ColorSelector;
@@ -117,6 +117,7 @@ function sketch(p5: P5Lib): void {
 
         const lineFill: LineFill = Random.randomElement([LineFill.EVEN_OVERLAP, LineFill.RANDOM_OVERLAP]) ?? LineFill.EVEN_OVERLAP;
         const lineTrend: LineTrend = Random.randomElement(Object.values(LineTrend)) ?? LineTrend.CONSTANT;
+        console.log(lineTrend);
 
         const config: LinesConfig = {
             NAME: 'Falling Lines',
@@ -124,15 +125,16 @@ function sketch(p5: P5Lib): void {
             // LINE_TOTAL: 25,
             LINE_FILL_CATEGORY: lineFill,
             // LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP,
-            LINE_TREND_CATEGORY: lineTrend,
-            // LINE_TREND_CATEGORY: LineTrend.CONSTANT,
-            COLOR_SELECTOR: selector
+            // LINE_TREND_CATEGORY: lineTrend,
+            LINE_TREND_CATEGORY: LineTrend.CONSTANT,
+            COLOR_SELECTOR: selector,
             // LINE_LENGTH_CATEGORY: Random.randomElement([LineLength.FULL_SCREEN, LineLength.MEDIUM, LineLength.LONG]) ?? LineLength.FULL_SCREEN,
-            // LINE_LENGTH_CATEGORY: LineLength.SHORT,
+            // LINE_LENGTH_CATEGORY: LineLength.LONG,
             // THICKNESS_CATEGORY: LineThickness.MIXED,
             // GRADIENT_RENDER: Random.randomElement(Object.values(LineRenderMode)),
             // LINE_TRANSPARENCY_CATEGORY: LineTransparency.HIGH_TRANSPARENCY,
-            // GRADIENT_TYPE: LineGradient.CONSTANT_MAX_LENGTH_GRADIENT
+            // GRADIENT_TYPE: LineGradient.CONSTANT_WINDOW_GRADIENT,
+            // EVEN_GRADIENT: false
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);
