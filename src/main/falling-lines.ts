@@ -135,7 +135,7 @@ export class FallingLines extends CanvasScreen {
         this.#GRADIENT_RENDER = config.GRADIENT_RENDER ?? Random.randomElement(Object.values(LineRenderMode)) ?? LineRenderMode.VERTICES;
         this.#GRADIENT_TYPE = config.GRADIENT_TYPE ?? Random.randomElement(Object.values(LineGradient)) ?? LineGradient.SOLID;
 
-        this.#GRADIENT_SIZE = config.GRADIENT_SIZE ?? Random.randomInt(2, 7);
+        this.#GRADIENT_SIZE = config.GRADIENT_SIZE ?? Random.randomInt(2, 5);
 
         this.#evenGradient = config.EVEN_GRADIENT ?? Random.randomBoolean();
         this.#gradient = this.#buildGradient();
