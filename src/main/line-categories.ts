@@ -23,7 +23,9 @@
 
 export enum LineDensity {
     LOW = 'low',
+    LOW_MEDIUM = 'low-medium',
     MEDIUM = 'medium',
+    MEDIUM_HIGH = 'medium-high',
     HIGH = 'high'
 }
 
@@ -71,7 +73,9 @@ export enum LineFill {
 
 export enum LineLength {
     SHORT = 'short',
+    SHORT_MEDIUM = 'short-medium',
     MEDIUM = 'medium',
+    MEDIUM_LONG = 'medium-long',
     LONG = 'long',
     FULL_SCREEN = 'full-screen',
     FULL_SCREEN_ONLY = 'full-screen-only',

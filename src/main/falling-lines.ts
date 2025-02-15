@@ -75,6 +75,8 @@ export interface LinesConfig {
     readonly EVEN_GRADIENT?: boolean;
 }
 
+// TODO - selector that selects from two or more selectors.
+// TODO - i.e. all lines are either short or long
 export class FallingLines extends CanvasScreen {
     static #LINE_THICKNESS_SELECTOR: CategorySelector<LineThickness> = new CategorySelector<LineThickness>([
         { category: LineThickness.THIN, range: new Range(0.25, 5) },
@@ -87,7 +89,9 @@ export class FallingLines extends CanvasScreen {
 
     static #LINE_LENGTH_SELECTOR: CategorySelector<LineLength> = new CategorySelector<LineLength>([
         { category: LineLength.SHORT, range: new Range(0.05, 0.35) },
+        { category: LineLength.SHORT_MEDIUM, range: new Range(0.2, 0.5) },
         { category: LineLength.MEDIUM, range: new Range(0.3, 0.7) },
+        { category: LineLength.MEDIUM_LONG, range: new Range(0.55, 0.8) },
         { category: LineLength.LONG, range: new Range(0.65, 0.9) },
         { category: LineLength.FULL_SCREEN, range: new Range(0.85, 1.1) },
         { category: LineLength.FULL_SCREEN_ONLY, range: new Range(1, 1) },

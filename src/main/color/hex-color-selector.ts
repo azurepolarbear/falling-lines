@@ -21,19 +21,12 @@
  * for full license details.
  */
 
-import P5Lib from 'p5';
-
-import { Color, ColorSelector, ColorSelectorType, P5Context } from '@batpb/genart';
+import { Color, ColorSelector, ColorSelectorType, P5Context, Random, RandomSelector } from '@batpb/genart';
 
 export class HexColorSelector extends ColorSelector {
     public constructor(random: boolean, hexes: string[]) {
         super('hex color selector', random);
-        const p5: P5Lib = P5Context.p5;
-
-        for (const hex of hexes) {
-            const c: Color = new Color(p5.color(hex));
-            this.addColorChoice(c);
-        }
+        this.#selectColors(hexes, Random.randomBoolean());
     }
 
     public override get type(): ColorSelectorType {
@@ -42,5 +35,35 @@ export class HexColorSelector extends ColorSelector {
 
     public override getColor(): Color {
         return this.selectColorFromChoices();
+    }
+
+    #selectColors(hexes: string[], inOrder: boolean): void {
+        const total: number = Random.randomInt(2, hexes.length);
+
+        if (inOrder) {
+            for (let i: number = 0; i < total; i++) {
+                if (i >= hexes.length) {
+                    break;
+                }
+
+                const c: Color = new Color(P5Context.p5.color(hexes[i]));
+                this.addColorChoice(c);
+                this.COLOR_NAMES.add(c.name);
+            }
+        } else {
+            const selector: RandomSelector<string> = new RandomSelector<string>(hexes);
+
+            for (let i: number = 0; i < total; i++) {
+                const hex: string | undefined = selector.getRandomElementAndRemove();
+
+                if (hex === undefined) {
+                    break;
+                }
+
+                const c: Color = new Color(P5Context.p5.color(hex));
+                this.addColorChoice(c);
+                this.COLOR_NAMES.add(c.name);
+            }
+        }
     }
 }

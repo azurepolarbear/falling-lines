@@ -67,8 +67,10 @@ interface HexPalette {
 
 function sketch(p5: P5Lib): void {
     const LINE_DENSITY_SELECTOR: CategorySelector<LineDensity> = new CategorySelector<LineDensity>([
-        // { category: LineDensity.LOW, range: new Range(5, 15) },
+        { category: LineDensity.LOW, range: new Range(5, 15) },
+        { category: LineDensity.LOW_MEDIUM, range: new Range(10, 20) },
         { category: LineDensity.MEDIUM, range: new Range(10, 30) },
+        { category: LineDensity.MEDIUM_HIGH, range: new Range(20, 50) },
         { category: LineDensity.HIGH, range: new Range(25, 200) }
     ], false);
 
@@ -93,7 +95,7 @@ function sketch(p5: P5Lib): void {
         const hexPalette: HexPalette | undefined = Random.randomElement(hexPalettes);
         let selector: ColorSelector;
 
-        if (Random.randomBoolean() && hexPalette) {
+        if (hexPalette) {
             selector = new HexColorSelector(true, hexPalette.colors);
         } else {
             const palettes: Palette[] = Array.from(ALL_PALETTES.values);
