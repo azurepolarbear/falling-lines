@@ -65,6 +65,18 @@ interface HexPalette {
 // 20 batpb/genart palettes
 //   Gradients build from gradient palettes
 
+// TODO
+// TODO - color palettes
+// TODO - gradeint palettes
+// TODO - RGB color selector
+// TODO - HSB color selector
+// TODO - HSB mapping
+// TODO - rename to parallel lines
+// TODO - implement different line starting points
+// TODO - add horizontal lines
+// TODO - add diagonal lines
+// TODO - add line sets
+
 function sketch(p5: P5Lib): void {
     const LINE_DENSITY_SELECTOR: CategorySelector<LineDensity> = new CategorySelector<LineDensity>([
         { category: LineDensity.LOW, range: new Range(5, 15) },
@@ -84,7 +96,15 @@ function sketch(p5: P5Lib): void {
             { name: 'winter sunrise', colors: ['#9994d6', '#9fade0', '#aec4ea', '#b9daee', '#c7ecf0'] },
             { name: 'persephone in winter', colors: ['#1c101e', '#3f0d2a', '#610a34', '#930643', '#e8025e'] },
             { name: 'forest frost', colors: ['#6a907f', '#a2c3b1', '#cee4df', '#ebf4f4', '#f5fff7'] },
-            { name: 'winter pine', colors: ['#cad3c5', '#84a98c', '#537970', '#344d50', '#2f3e46'] }
+            { name: 'winter pine', colors: ['#cad3c5', '#84a98c', '#537970', '#344d50', '#2f3e46'] },
+            {name: 'cherry, orange, lemon, lime', colors: ['#ff5c5c', '#ffa852', '#ffce5c', '#b8e77e', '#63c57f']},
+            {name: 'costa rican daze', colors: ['#000000', '#444444', '#FFFBFC', '#AC206A', '#3C91E6']},
+            {name: 'garden shadow', colors: ['#000000', '#444444', '#71B340', '#AC206A', '#3C91E6']},
+            {name: 'sunset shadow', colors: ['#000000', '#444444', '#D17A22', '#AC206A', '#3C91E6']},
+            {name: 'deathkiss', colors: ['#000000', '#444444', '#5F5F5F', '#797979', '#AC206A' ]},
+            { name: 'goth babe', colors: ['#4b5d67', '#1a2626', '#170114', '#331134', '#464057']},
+            {name: 'bring on the neon', colors: ['#ff00a9', '#8000ff', '#f0ff07', '#a5ff0b', '#00ddff']},
+            {name: 'beach belladonna', colors: ['#94dfca', '#435f54', '#120a0a', '#230717', '#260606']},
         ];
     }
 
