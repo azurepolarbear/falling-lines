@@ -24,7 +24,7 @@
 import P5Lib from 'p5';
 
 import {
-    ASPECT_RATIOS,
+    ASPECT_RATIOS, AspectRatio,
     CanvasContext,
     CanvasScreen,
     Color,
@@ -196,6 +196,15 @@ export class FallingLines extends CanvasScreen {
             CanvasContext.updateAspectRatio(ASPECT_RATIOS.SOCIAL_VIDEO);
         } else if (p5.key === ' ') {
             this.#logFeatures();
+        } else if (p5.key === 's') {
+            this.saveSocialMediaSet(2000).then(
+                (): void => {
+                    console.log('Social media set saved.');
+                },
+                (): void => {
+                    console.error('Error saving social media set.');
+                }
+            );
         }
     }
 
@@ -424,5 +433,55 @@ export class FallingLines extends CanvasScreen {
 
     #addLine(line: Line): void {
         this.#LINES.push(line);
+    }
+
+    protected async saveSocialMediaSet(timeout: number): Promise<void> {
+        const ratios: AspectRatio[] = [
+            ASPECT_RATIOS.SQUARE,
+            ASPECT_RATIOS.PINTEREST_PIN,
+            ASPECT_RATIOS.TIKTOK_PHOTO,
+            ASPECT_RATIOS.SOCIAL_VIDEO,
+            ASPECT_RATIOS.WIDESCREEN,
+            ...this.#buildAspectRatios()
+        ];
+
+        let count: number = 1;
+        for (const ratio of ratios) {
+            await this.#saveAspectRatio(ratio, count, timeout)
+                .then((): void => {
+                    console.log(`Saved ${ratio.NAME}.`);
+                });
+
+            count++;
+        }
+
+        CanvasContext.updateAspectRatio(ASPECT_RATIOS.SQUARE);
+    }
+
+    #buildAspectRatios(): AspectRatio[] {
+        return [
+            { WIDTH_RATIO: 2, HEIGHT_RATIO: 3, NAME: '2:3'},
+            { WIDTH_RATIO: 3, HEIGHT_RATIO: 2, NAME: '3:2'},
+            { WIDTH_RATIO: 5, HEIGHT_RATIO: 7, NAME: '5:7'},
+            { WIDTH_RATIO: 7, HEIGHT_RATIO: 5, NAME: '7:5'},
+            { WIDTH_RATIO: 4, HEIGHT_RATIO: 5, NAME: '4:5'},
+            { WIDTH_RATIO: 5, HEIGHT_RATIO: 4, NAME: '5:4'},
+            { WIDTH_RATIO: 3, HEIGHT_RATIO: 4, NAME: '3:4'},
+            { WIDTH_RATIO: 4, HEIGHT_RATIO: 3, NAME: '4:3'}
+        ];
+    }
+
+    async #saveAspectRatio(ratio: AspectRatio, count: number, timeout: number): Promise<void> {
+        const p5: P5Lib = P5Context.p5;
+
+        CanvasContext.updateAspectRatio(ratio);
+        await new Promise<void>((f: (value: void | PromiseLike<void>) => void): void => {
+            setTimeout(f, timeout);
+        });
+
+        p5.save(`${this.NAME}_0${count}_${ratio.NAME}.png`);
+        await new Promise<void>((f: (value: void | PromiseLike<void>) => void): void => {
+            setTimeout(f, timeout);
+        });
     }
 }

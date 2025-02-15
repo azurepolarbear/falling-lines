@@ -90,13 +90,16 @@ function sketch(p5: P5Lib): void {
 
     p5.setup = (): void => {
         P5Context.initialize(p5);
+        p5.pixelDensity(4);
         CanvasContext.buildCanvas(ASPECT_RATIOS.SQUARE, 1080, p5.WEBGL, true);
         const hexPalettes: HexPalette[] = buildPalettes();
         const hexPalette: HexPalette | undefined = Random.randomElement(hexPalettes);
         let selector: ColorSelector;
+        let paletteName: string = '';
 
-        if (hexPalette) {
+        if (Random.randomBoolean() && hexPalette) {
             selector = new HexColorSelector(true, hexPalette.colors);
+            paletteName = hexPalette.name;
         } else {
             const palettes: Palette[] = Array.from(ALL_PALETTES.values);
             const selectors: ColorSelector[] = palettes.map((palette: Palette) => {
@@ -105,9 +108,11 @@ function sketch(p5: P5Lib): void {
             const selectorManager: ColorSelectorManager = new ColorSelectorManager();
             selectorManager.addColorSelectors(selectors);
             selector = selectorManager.getRandomColorSelector();
+            paletteName = selector.name;
         }
 
         LINE_DENSITY_SELECTOR.setRandomCategory();
+        console.log(paletteName);
 
         const lineFill: LineFill = Random.randomElement([LineFill.EVEN_OVERLAP, LineFill.RANDOM_OVERLAP]) ?? LineFill.EVEN_OVERLAP;
         const lineTrend: LineTrend = Random.randomElement(Object.values(LineTrend)) ?? LineTrend.CONSTANT;
