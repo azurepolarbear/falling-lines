@@ -38,7 +38,16 @@ import {
 } from '@batpb/genart';
 
 import { VerticalGradientLine, Line, LineRenderMode } from './line';
-import { LineFill, LineGradient, LineLength, LineThickness, LineTransparency, LineTrend } from './line-categories';
+import {
+    isConstantTypeGradient,
+    isLineLengthTypeGradient,
+    LineFill,
+    LineGradient,
+    LineLength,
+    LineThickness,
+    LineTransparency,
+    LineTrend
+} from './line-categories';
 import { GradientStep, MappedGradient } from './color';
 import { CategorySelector } from './selector';
 
@@ -102,7 +111,6 @@ export class FallingLines extends CanvasScreen {
 
     readonly #GRADIENT_TYPE: LineGradient;
     readonly #GRADIENT_SIZE: number;
-    readonly #GRADIENT_COLORS: Color[] = [];
 
     readonly #COLOR_SELECTOR: ColorSelector;
 
@@ -123,14 +131,10 @@ export class FallingLines extends CanvasScreen {
         this.#GRADIENT_RENDER = config.GRADIENT_RENDER ?? Random.randomElement(Object.values(LineRenderMode)) ?? LineRenderMode.VERTICES;
         this.#GRADIENT_TYPE = config.GRADIENT_TYPE ?? Random.randomElement(Object.values(LineGradient)) ?? LineGradient.SOLID;
 
-        this.#GRADIENT_SIZE = config.GRADIENT_SIZE ?? Random.randomInt(2, 5);
-
-        for (let i: number = 0; i < this.#GRADIENT_SIZE; i++) {
-            this.#GRADIENT_COLORS.push(this.#COLOR_SELECTOR.getColor());
-        }
+        this.#GRADIENT_SIZE = config.GRADIENT_SIZE ?? Random.randomInt(2, 7);
 
         this.#evenGradient = config.EVEN_GRADIENT ?? Random.randomBoolean();
-        this.#gradient = this.#buildGradient(this.#GRADIENT_COLORS);
+        this.#gradient = this.#buildGradient();
 
         this.#initializeLineThicknessSelector(config.THICKNESS_CATEGORY, config.SAME_THICKNESS);
         this.#initializeLineLengthSelector(config.LINE_LENGTH_CATEGORY, config.SAME_LENGTH);
@@ -230,7 +234,7 @@ export class FallingLines extends CanvasScreen {
             GRADIENT_RENDER: this.#GRADIENT_RENDER,
             GRADIENT_TYPE: this.#GRADIENT_TYPE,
             GRADIENT_SIZE: this.#GRADIENT_SIZE,
-            GRADIENT_COLORS: this.#GRADIENT_COLORS,
+            GRADIENT_COLORS: this.#COLOR_SELECTOR.colorNames,
             EVEN_GRADIENT: this.#evenGradient
         };
 
@@ -344,7 +348,7 @@ export class FallingLines extends CanvasScreen {
     }
 
     #buildLine(x: number): Line {
-        length = this.#getLineLength(x);
+        const length: number = this.#getLineLength(x);
 
         const startY: number = FallingLines.MIN_Y;
         const endY: number = startY + length;
@@ -367,56 +371,50 @@ export class FallingLines extends CanvasScreen {
             let gradientStart: number = CoordinateMapper.minY;
             let gradientEnd: number = CoordinateMapper.maxY;
 
-            if (this.#GRADIENT_TYPE === LineGradient.CONSTANT_LINE_LENGTH_GRADIENT) {
+            if (isLineLengthTypeGradient(this.#GRADIENT_TYPE)) {
                 gradientStart = start.getY(CoordinateMode.CANVAS);
                 gradientEnd = end.getY(CoordinateMode.CANVAS);
             }
 
             let gradient: MappedGradient;
 
-            if (this.#GRADIENT_TYPE === LineGradient.CONSTANT_MAX_LENGTH_GRADIENT ||
-                this.#GRADIENT_TYPE === LineGradient.CONSTANT_WINDOW_GRADIENT ||
-                this.#GRADIENT_TYPE === LineGradient.CONSTANT_LINE_LENGTH_GRADIENT
-            ) {
+            if (isConstantTypeGradient(this.#GRADIENT_TYPE)) {
                 gradient = this.#gradient;
             } else {
-                gradient = this.#buildGradient(this.#GRADIENT_COLORS);
+                gradient = this.#buildGradient();
             }
 
             return new VerticalGradientLine(start, end, thickness, gradient, this.#GRADIENT_RENDER, gradientStart, gradientEnd);
         }
     }
 
-    #buildGradient(colors: Color[]): MappedGradient {
+    #buildGradient(): MappedGradient {
         const steps: GradientStep[] = [];
 
         if (this.#evenGradient) {
-            colors.forEach((color: Color, index: number): void => {
+            for (let i: number = 0; i < this.#GRADIENT_SIZE; i++) {
+                const color: Color = this.#COLOR_SELECTOR.getColor();
                 color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
-                steps.push({ color: color, maxMapPercentage: index / (colors.length - 1) });
-            });
+                steps.push({ color: color, maxMapPercentage: i / (this.#GRADIENT_SIZE - 1) });
+            }
         } else {
-            const maxPercent: number = 1.0 / (colors.length - 1);
+            const maxPercent: number = 1.0 / (this.#GRADIENT_SIZE - 1);
             const minPercent: number = maxPercent * 0.5;
             let percent: number = 0;
-            let index: number = 0;
-            
 
             while (percent < 1.0) {
                 if (1.0 - percent < minPercent) {
                     percent = 1.0;
                 }
 
-                const color: Color = colors[index];
+                const color: Color = this.#COLOR_SELECTOR.getColor();
                 color.alpha = Math.ceil(FallingLines.#LINE_TRANSPARENCY_SELECTOR.getChoice());
                 steps.push({ color: color, maxMapPercentage: percent });
 
-                index = (index + 1) % colors.length;
                 percent += Random.randomFloat(minPercent, maxPercent);
             }
         }
 
-        console.log(steps);
         return new MappedGradient(steps);
     }
 

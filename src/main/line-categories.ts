@@ -96,24 +96,9 @@ export enum LineGradient {
     SOLID = 'solid',
     CONSTANT_WINDOW_GRADIENT = 'constant-window-gradient',
     CONSTANT_LINE_LENGTH_GRADIENT = 'constant-line-length-gradient',
-    CONSTANT_MAX_LENGTH_GRADIENT = 'constant-max-length-gradient'
-}
-
-export enum ColorLayout {
-    /**
-     * All lines have the same color.
-     */
-    SAME_COLOR = 'same-color',
-
-    /**
-     * All lines have the same gradient.
-     */
-    SAME_GRADIENT = 'same-gradient',
-
-    /**
-     * Gradient is built from one side of the window to the other.
-     */
-    WINDOW_GRADIENT = 'window-gradient'
+    CONSTANT_MAX_LENGTH_GRADIENT = 'constant-max-length-gradient',
+    RANDOM_LINE_LENGTH_GRADIENT = 'random-line-length-gradient',
+    RANDOM_WINDOW_GRADIENT = 'random-window-gradient',
 }
 
 export enum LineAlignment {
@@ -122,4 +107,17 @@ export enum LineAlignment {
     MIDDLE = 'middle',
     PATH = 'path',
     MIXED = 'mixed'
+}
+
+export function isLineLengthTypeGradient(lineGradient: LineGradient): boolean {
+    const constant: boolean = lineGradient === LineGradient.CONSTANT_LINE_LENGTH_GRADIENT;
+    const random: boolean = lineGradient === LineGradient.RANDOM_LINE_LENGTH_GRADIENT;
+    return constant || random;
+}
+
+export function isConstantTypeGradient(lineGradient: LineGradient): boolean {
+    const window: boolean = lineGradient === LineGradient.CONSTANT_WINDOW_GRADIENT;
+    const line: boolean = lineGradient === LineGradient.CONSTANT_LINE_LENGTH_GRADIENT;
+    const max: boolean = lineGradient === LineGradient.CONSTANT_MAX_LENGTH_GRADIENT;
+    return window || line || max;
 }

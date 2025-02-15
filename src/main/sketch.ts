@@ -56,16 +56,6 @@ interface HexPalette {
 // TODO - selecting a high density makes it more likely to select a higher transparency.
 // TODO - solid lines with gradient are drawn with a VERTICES render mode.
 
-// TODO - get 1 print/product output for each achieved goal
-
-// TODO - COLOR TYPES
-// - constant vertical line gradient (2 - n colors)
-// - constant vertical max line length gradient (2 - n colors)
-// - random vertical window gradient (2 - n colors)
-// - random vertical line gradient (2 - n colors)
-// - constant vertical window gradient (2 - n colors) changing over a horizontal gradient (2 color sets)
-// - constant vertical line gradient (2 - n colors) changing over a horizontal gradient (2 color sets)
-
 // TODO - COLOR SELECTION
 // 2 - n color selection in HexColorPalette
 // - 30 HexColor palettes
@@ -135,8 +125,8 @@ function sketch(p5: P5Lib): void {
             // THICKNESS_CATEGORY: LineThickness.MIXED,
             // GRADIENT_RENDER: Random.randomElement(Object.values(LineRenderMode)),
             // LINE_TRANSPARENCY_CATEGORY: LineTransparency.HIGH_TRANSPARENCY,
-            // GRADIENT_TYPE: LineGradient.CONSTANT_WINDOW_GRADIENT,
-            // EVEN_GRADIENT: false
+            // GRADIENT_TYPE: LineGradient.RANDOM_WINDOW_GRADIENT,
+            // EVEN_GRADIENT: true
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);
