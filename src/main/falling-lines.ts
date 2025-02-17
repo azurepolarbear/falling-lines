@@ -75,6 +75,9 @@ export interface LinesConfig {
     readonly EVEN_GRADIENT?: boolean;
 }
 
+// TODO - background type
+// TODO - - lighter, darker, regular
+
 // TODO - selector that selects from two or more selectors.
 // TODO - i.e. all lines are either short or long
 export class FallingLines extends CanvasScreen {
@@ -125,6 +128,8 @@ export class FallingLines extends CanvasScreen {
     #evenGradient: boolean;
     #gradient: MappedGradient;
 
+    #background: Color;
+
     public constructor(config: LinesConfig) {
         super(config.NAME);
         this.#lineTotal = config.LINE_TOTAL;
@@ -139,6 +144,8 @@ export class FallingLines extends CanvasScreen {
 
         this.#evenGradient = config.EVEN_GRADIENT ?? Random.randomBoolean();
         this.#gradient = this.#buildGradient();
+
+        this.#background = this.#COLOR_SELECTOR.getBackgroundColor(0.4, 0.4, 0.2);
 
         this.#initializeLineThicknessSelector(config.THICKNESS_CATEGORY, config.SAME_THICKNESS);
         this.#initializeLineLengthSelector(config.LINE_LENGTH_CATEGORY, config.SAME_LENGTH);
@@ -177,7 +184,7 @@ export class FallingLines extends CanvasScreen {
 
     public override draw(): void {
         const p5: P5Lib = P5Context.p5;
-        p5.background(0);
+        p5.background(this.#background.color);
         this.#LINES.forEach((line: Line): void => {
             line.draw();
         });
