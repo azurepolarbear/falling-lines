@@ -126,7 +126,8 @@ function sketch(p5: P5Lib): void {
             { name: 'nusery shadow', colors: ['#000000', '#7F95D1', '#FF82A9', '#FFC0BE', '#FFEBE7'] },
             { name: 'sunny ocean sky', colors: ['#003494', '#FFD000', '#D9F0FF', '#A3D5FF', '#83C9F4']},
             { name: 'nonbinary flag', colors: ['#FCF434', '#FFFFFF', '#9C59D1', '#2C2C2C']},
-            { name: 'miss mayhem too', colors: ['#000000', '#ef6fb5', '#f9f9ea', '#cbacee', '#aaf1ed']}
+            { name: 'miss mayhem too', colors: ['#000000', '#ef6fb5', '#f9f9ea', '#cbacee', '#aaf1ed']},
+            { name: 'mindful palette, no. 151', colors: ['#f9f6f4', '#e8eaea', '#648d95', '#92555b', '#5b4148', '#e6be9c']}
         ];
     }
 
@@ -152,6 +153,10 @@ function sketch(p5: P5Lib): void {
             selector = selectorManager.getRandomColorSelector();
             paletteName = selector.name;
         }
+
+        // const index: number = 39;
+        // selector = new HexColorSelector(true, hexPalettes[index].colors);
+        // paletteName = hexPalettes[index].name;
 
         LINE_DENSITY_SELECTOR.setRandomCategory();
         console.log(paletteName);
