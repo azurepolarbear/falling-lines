@@ -41,6 +41,7 @@ import { VerticalGradientLine, Line, LineRenderMode } from './line';
 import {
     isConstantTypeGradient,
     isLineLengthTypeGradient,
+    LineAlignment,
     LineFill,
     LineGradient,
     LineLength,
@@ -73,6 +74,8 @@ export interface LinesConfig {
     readonly GRADIENT_TYPE?: LineGradient;
     readonly GRADIENT_SIZE?: number;
     readonly EVEN_GRADIENT?: boolean;
+
+    readonly LINE_ALIGNMENT?: LineAlignment;
 }
 
 // TODO - background type
@@ -121,6 +124,8 @@ export class FallingLines extends CanvasScreen {
 
     readonly #COLOR_SELECTOR: ColorSelector;
 
+    readonly #LINE_ALIGNMENT: LineAlignment;
+
     #lineTotal: number;
 
     #maxLineY: number = Number.MIN_SAFE_INTEGER;
@@ -144,6 +149,8 @@ export class FallingLines extends CanvasScreen {
 
         this.#evenGradient = config.EVEN_GRADIENT ?? Random.randomBoolean();
         this.#gradient = this.#buildGradient();
+
+        this.#LINE_ALIGNMENT = config.LINE_ALIGNMENT ?? LineAlignment.TOP;
 
         this.#background = this.#COLOR_SELECTOR.getBackgroundColor(0.4, 0.4, 0.2);
 
