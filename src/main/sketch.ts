@@ -40,10 +40,10 @@ import {
     ScreenHandler
 } from '@batpb/genart';
 
-import { HexColorSelector } from './color';
-import { FallingLines, LinesConfig } from './falling-lines';
-import { LineDensity, LineFill, LineTrend } from './line-categories';
-import { CategorySelector } from './selector';
+import {HexColorSelector} from './color';
+import {FallingLines, LinesConfig} from './falling-lines';
+import {LineDensity, LineFill, LineLength, LineTrend} from './line-categories';
+import {CategorySelector} from './selector';
 
 interface HexPalette {
     name: string;
@@ -131,6 +131,18 @@ function sketch(p5: P5Lib): void {
         ];
     }
 
+    function buildJulyPalettes(): HexPalette[] {
+        return [
+            { name: 'independence day', colors: ['#E63946', '#F1FAEE', '#A8DADC', '#457B9D', '#1D3557'] },
+            { name: 'option-1', colors: ['#BB1212', '#DD7F7F', '#EEEEEE', '#537DA3', '#0E5493'] },
+            { name: 'option-2', colors: ['#FF0000', '#FF8484', '#FFFFFF', '#81FCFF', '#00D2FF'] },
+            { name: 'option-3', colors: ['#FF0000', '#FFFFFF', '#0900FF'] },
+            { name: 'option-4', colors: ['#FF0000', '#FFFFFF', '#4B7BFF'] },
+            { name: 'option-5', colors: ['#511F1F', '#5E2F2F', '#DDDCDC', '#36426D', '#2E225C']},
+            { name: 'option-6', colors: ['#FFFFFF', '#FFD8D8', '#FFA6A6', '#B7CEFF', '#D0F2FF']}
+        ];
+    }
+
     p5.setup = (): void => {
         P5Context.initialize(p5);
         p5.pixelDensity(4);
@@ -154,12 +166,15 @@ function sketch(p5: P5Lib): void {
             paletteName = selector.name;
         }
 
+        const julyPalette: HexPalette | undefined = Random.randomElement(buildJulyPalettes());
+        selector = new HexColorSelector(true, julyPalette?.colors ?? ['#000000', '#FFFFFF']);
+
         // const index: number = 39;
         // selector = new HexColorSelector(true, hexPalettes[index].colors);
         // paletteName = hexPalettes[index].name;
 
-        LINE_DENSITY_SELECTOR.setRandomCategory();
         console.log(paletteName);
+        LINE_DENSITY_SELECTOR.setRandomCategory();
 
         const lineFill: LineFill = Random.randomElement([LineFill.EVEN_OVERLAP, LineFill.RANDOM_OVERLAP]) ?? LineFill.EVEN_OVERLAP;
         const lineTrend: LineTrend = Random.randomElement(Object.values(LineTrend)) ?? LineTrend.CONSTANT;
@@ -174,7 +189,7 @@ function sketch(p5: P5Lib): void {
             LINE_TREND_CATEGORY: lineTrend,
             // LINE_TREND_CATEGORY: LineTrend.CONSTANT,
             COLOR_SELECTOR: selector,
-            // LINE_LENGTH_CATEGORY: Random.randomElement([LineLength.FULL_SCREEN, LineLength.MEDIUM, LineLength.LONG]) ?? LineLength.FULL_SCREEN,
+            LINE_LENGTH_CATEGORY: Random.randomElement([LineLength.FULL_SCREEN, LineLength.MEDIUM_LONG, LineLength.LONG, LineLength.FULL_SCREEN_ONLY, LineLength.MIXED]) ?? LineLength.FULL_SCREEN,
             // LINE_LENGTH_CATEGORY: LineLength.LONG,
             // THICKNESS_CATEGORY: LineThickness.MIXED,
             // GRADIENT_RENDER: Random.randomElement(Object.values(LineRenderMode)),

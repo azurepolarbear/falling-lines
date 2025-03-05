@@ -151,6 +151,7 @@ export class FallingLines extends CanvasScreen {
         this.#gradient = this.#buildGradient();
 
         this.#LINE_ALIGNMENT = config.LINE_ALIGNMENT ?? LineAlignment.TOP;
+        console.log(this.#LINE_ALIGNMENT);
 
         this.#background = this.#COLOR_SELECTOR.getBackgroundColor(0.4, 0.4, 0.2);
 
