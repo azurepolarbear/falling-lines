@@ -42,7 +42,7 @@ import {
 
 import {HexColorSelector} from './color';
 import {FallingLines, LinesConfig} from './falling-lines';
-import {LineDensity, LineFill, LineLength, LineTrend} from './line-categories';
+import {LineDensity, LineFill, LineLength, LineTransparency, LineTrend} from './line-categories';
 import {CategorySelector} from './selector';
 
 interface HexPalette {
@@ -143,6 +143,12 @@ function sketch(p5: P5Lib): void {
         ];
     }
 
+    function buildGrapevinePalettes(): HexPalette[] {
+        return [
+            { name: 'grapevine', colors: ['#65204E', '#3C2939', '#4E3B4A', '#37202f', '#FBC253', '#312942', '#FEF9F3']}
+        ];
+    }
+
     p5.setup = (): void => {
         P5Context.initialize(p5);
         p5.pixelDensity(4);
@@ -166,8 +172,13 @@ function sketch(p5: P5Lib): void {
             paletteName = selector.name;
         }
 
+        const gPalette: HexPalette | undefined = Random.randomElement(buildGrapevinePalettes());
+        console.log(gPalette);
+        // selector = new HexColorSelector(true, gPalette?.colors ?? ['#000000', '#FFFFFF']);
+
         const julyPalette: HexPalette | undefined = Random.randomElement(buildJulyPalettes());
-        selector = new HexColorSelector(true, julyPalette?.colors ?? ['#000000', '#FFFFFF']);
+        console.log(julyPalette);
+        // selector = new HexColorSelector(true, julyPalette?.colors ?? ['#000000', '#FFFFFF']);
 
         // const index: number = 39;
         // selector = new HexColorSelector(true, hexPalettes[index].colors);
@@ -193,7 +204,7 @@ function sketch(p5: P5Lib): void {
             // LINE_LENGTH_CATEGORY: LineLength.LONG,
             // THICKNESS_CATEGORY: LineThickness.MIXED,
             // GRADIENT_RENDER: Random.randomElement(Object.values(LineRenderMode)),
-            // LINE_TRANSPARENCY_CATEGORY: LineTransparency.HIGH_TRANSPARENCY,
+            LINE_TRANSPARENCY_CATEGORY: Random.randomElement([LineTransparency.SOLID, LineTransparency.LOW_TRANSPARENCY]) ?? LineTransparency.SOLID,
             // GRADIENT_TYPE: LineGradient.RANDOM_WINDOW_GRADIENT,
             // EVEN_GRADIENT: true
         };
