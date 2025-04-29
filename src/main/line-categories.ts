@@ -102,7 +102,7 @@ export enum LineGradient {
     CONSTANT_LINE_LENGTH_GRADIENT = 'constant-line-length-gradient',
     CONSTANT_MAX_LENGTH_GRADIENT = 'constant-max-length-gradient',
     RANDOM_LINE_LENGTH_GRADIENT = 'random-line-length-gradient',
-    RANDOM_WINDOW_GRADIENT = 'random-window-gradient',
+    RANDOM_WINDOW_GRADIENT = 'random-window-gradient'
 }
 
 export enum LineAlignment {

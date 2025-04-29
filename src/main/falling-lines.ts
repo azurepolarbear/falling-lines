@@ -475,14 +475,14 @@ export class FallingLines extends CanvasScreen {
 
     #buildAspectRatios(): AspectRatio[] {
         return [
-            { WIDTH_RATIO: 2, HEIGHT_RATIO: 3, NAME: '2:3'},
-            { WIDTH_RATIO: 3, HEIGHT_RATIO: 2, NAME: '3:2'},
-            { WIDTH_RATIO: 5, HEIGHT_RATIO: 7, NAME: '5:7'},
-            { WIDTH_RATIO: 7, HEIGHT_RATIO: 5, NAME: '7:5'},
-            { WIDTH_RATIO: 4, HEIGHT_RATIO: 5, NAME: '4:5'},
-            { WIDTH_RATIO: 5, HEIGHT_RATIO: 4, NAME: '5:4'},
-            { WIDTH_RATIO: 3, HEIGHT_RATIO: 4, NAME: '3:4'},
-            { WIDTH_RATIO: 4, HEIGHT_RATIO: 3, NAME: '4:3'}
+            { WIDTH_RATIO: 2, HEIGHT_RATIO: 3, NAME: '2:3' },
+            { WIDTH_RATIO: 3, HEIGHT_RATIO: 2, NAME: '3:2' },
+            { WIDTH_RATIO: 5, HEIGHT_RATIO: 7, NAME: '5:7' },
+            { WIDTH_RATIO: 7, HEIGHT_RATIO: 5, NAME: '7:5' },
+            { WIDTH_RATIO: 4, HEIGHT_RATIO: 5, NAME: '4:5' },
+            { WIDTH_RATIO: 5, HEIGHT_RATIO: 4, NAME: '5:4' },
+            { WIDTH_RATIO: 3, HEIGHT_RATIO: 4, NAME: '3:4' },
+            { WIDTH_RATIO: 4, HEIGHT_RATIO: 3, NAME: '4:3' }
         ];
     }
 
