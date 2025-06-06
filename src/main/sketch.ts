@@ -42,7 +42,7 @@ import {
 
 import { HexColorSelector } from './color';
 import { FallingLines, LinesConfig } from './falling-lines';
-import { LineDensity, LineFill, LineLength, LineTransparency, LineTrend } from './line-categories';
+import { LineDensity, LineFill, LineTrend } from './line-categories';
 import { CategorySelector } from './selector';
 
 interface HexPalette {
@@ -67,7 +67,7 @@ interface HexPalette {
 
 // TODO
 // TODO - color palettes
-// TODO - gradeint palettes
+// TODO - gradient palettes
 // TODO - RGB color selector
 // TODO - HSB color selector
 // TODO - HSB mapping
@@ -117,13 +117,13 @@ function sketch(p5: P5Lib): void {
             { name: 'lava', colors: ['#03071E', '#370617', '#6A040F', '#9D0208', '#D00000', '#DC2F02', '#E85D04', '#F48C06', '#FAA307', '#FFBA08'] },
             { name: 'iceberg', colors: ['#03045E', '#023E8A', '#0077B6', '#0096C7', '#00B4D8', '#48CAE4', '#90E0EF', '#ADE8F4', '#CAF0F8'] },
             { name: "it's a baby", colors: ['#CDB4DB', '#FFC8DD', '#FFAFCC', '#BDE0FE', '#A2D2FF'] },
-            { name: 'coblestone midnight', colors: ['#121212', '#393D3F', '#D3D4D6', '#928E80', '#857C7B', '#334956', '#223843', '#19414D', '#28253A'] },
+            { name: 'cobblestone midnight', colors: ['#121212', '#393D3F', '#D3D4D6', '#928E80', '#857C7B', '#334956', '#223843', '#19414D', '#28253A'] },
             { name: 'mardi gras - let the good times roll', colors: ['#cfae29', '#32843b', '#241b20', '#4e2475', '#ffb22b'] },
             { name: 'transgender flag', colors: ['#5BCEFA', '#F5A9B8', '#FFFFFF'] },
             { name: 'bisexual flag', colors: ['#D60270', '#9B4F96', '#0038A8'] },
             { name: 'pride', colors: ['#E40303', '#FF8C00', '#FFED00', '#008026', '#004CFF', '#732982'] },
             { name: 'lavender licorice', colors: ['#000000', '#502F4C', '#70587C', '#C8B8DB', '#F9F4F5'] },
-            { name: 'nusery shadow', colors: ['#000000', '#7F95D1', '#FF82A9', '#FFC0BE', '#FFEBE7'] },
+            { name: 'nursery shadow', colors: ['#000000', '#7F95D1', '#FF82A9', '#FFC0BE', '#FFEBE7'] },
             { name: 'sunny ocean sky', colors: ['#003494', '#FFD000', '#D9F0FF', '#A3D5FF', '#83C9F4'] },
             { name: 'nonbinary flag', colors: ['#FCF434', '#FFFFFF', '#9C59D1', '#2C2C2C'] },
             { name: 'miss mayhem too', colors: ['#000000', '#ef6fb5', '#f9f9ea', '#cbacee', '#aaf1ed'] },
@@ -133,19 +133,45 @@ function sketch(p5: P5Lib): void {
 
     function buildJulyPalettes(): HexPalette[] {
         return [
-            { name: 'independence day', colors: ['#E63946', '#F1FAEE', '#A8DADC', '#457B9D', '#1D3557'] },
-            { name: 'option-1', colors: ['#BB1212', '#DD7F7F', '#EEEEEE', '#537DA3', '#0E5493'] },
-            { name: 'option-2', colors: ['#FF0000', '#FF8484', '#FFFFFF', '#81FCFF', '#00D2FF'] },
-            { name: 'option-3', colors: ['#FF0000', '#FFFFFF', '#0900FF'] },
-            { name: 'option-4', colors: ['#FF0000', '#FFFFFF', '#4B7BFF'] },
-            { name: 'option-5', colors: ['#511F1F', '#5E2F2F', '#DDDCDC', '#36426D', '#2E225C'] },
-            { name: 'option-6', colors: ['#FFFFFF', '#FFD8D8', '#FFA6A6', '#B7CEFF', '#D0F2FF'] }
+            // { name: 'independence day', colors: ['#E63946', '#F1FAEE', '#A8DADC', '#457B9D', '#1D3557'] },
+            // { name: 'option-1', colors: ['#BB1212', '#DD7F7F', '#EEEEEE', '#537DA3', '#0E5493'] },
+            // { name: 'option-2', colors: ['#FF0000', '#FF8484', '#FFFFFF', '#81FCFF', '#00D2FF'] },
+            // { name: 'option-3', colors: ['#FF0000', '#FFFFFF', '#0900FF'] },
+            // { name: 'option-4', colors: ['#FF0000', '#FFFFFF', '#4B7BFF'] },
+            // { name: 'option-5', colors: ['#511F1F', '#5E2F2F', '#DDDCDC', '#36426D', '#2E225C'] },
+            // { name: 'option-6', colors: ['#FFFFFF', '#FFD8D8', '#FFA6A6', '#B7CEFF', '#D0F2FF'] },
+            { name: 'american flag', colors: ['#B31942', '#0A3161'] }
         ];
     }
 
     function buildGrapevinePalettes(): HexPalette[] {
         return [
             { name: 'grapevine', colors: ['#65204E', '#3C2939', '#4E3B4A', '#37202f', '#FBC253', '#312942', '#FEF9F3'] }
+        ];
+    }
+
+    function buildMothersDayPalettes(): HexPalette[] {
+        return [
+            { name: 'mindful palettes, no. 172', colors: ['#FDFAF1', '#FADFD2', '#C6DECF', '#DEBEEF', '#59529C', '#02273A'] },
+            { name: 'butterfly palette, no. 20', colors: ['#403A60', '#F5DADF', '#E782A9', '#C04C36', '#73381D', '#3F2021'] },
+            { name: 'mindful palettes, no. 129', colors: ['#FDFAF1', '#F5E5CE', '#DDBBFF', '#E5C1A3', '#275779', '#4D213D'] },
+            { name: 'mindful palettes, no. 68', colors: ['#FAEADD', '#F29CB7', '#FBCF4F', '#DDAAFF', '#522A6F', '#222023'] },
+            { name: 'mindful palettes, no. 103', colors: ['#F9F8EF', '#E5DCD6', '#E4898A', '#A65570', '#94B8C1', '#1A161D'] },
+            { name: 'gradient haiku, no. 37', colors: ['#F3FCE1', '#BDF7EF', '#B9DCF2', '#D6C8EE', '#F8C6DB'] },
+            { name: 'sorbet', colors: ['#FFC1CF', '#E8FFB7', '#E2A0FF', '#C4F5FC', '#B7FFD8'] },
+            { name: 'lilac violet', colors: ['#531CB3', '#944BBB', '#AA7BC3', '#CC92C2'] }
+        ]
+    }
+
+    function buildPridePalettes(): HexPalette[] {
+        return [
+            { name: 'pride', colors: ['#E40303', '#FF8C00', '#FFED00', '#008026', '#004CFF', '#732982'] },
+            { name: 'progress pride', colors: ['#E40303', '#FF8C00', '#FFED00', '#008026', '#004DFF', '#750787', '#FFFFFF', '#FFAFC8', '#74D7EE', '#613915', '#000000'] },
+            { name: 'gay pride flag', colors: ['#078D70', '#26CEAA', '#98E8C1', '#FFFFFF', '#7BADE2', '#5049CC', '#3D1A78'] },
+            { name: 'lesbian pride flag', colors: ['#D52D00', '#EF7627', '#FF9A56', '#FFFFFF', '#D162A4', '#B55690', '#A30262'] },
+            { name: 'bisexual pride flag', colors: ['#D60270', '#9B4F96', '#0038A8'] },
+            { name: 'transgender pride flag', colors: ['#5BCEFA', '#F5A9B8', '#FFFFFF'] },
+            { name: 'nonbinary pride flag', colors: ['#FCF434', '#FFFFFF', '#9C59D1', '#2C2C2C'] }
         ];
     }
 
@@ -184,12 +210,23 @@ function sketch(p5: P5Lib): void {
         // selector = new HexColorSelector(true, hexPalettes[index].colors);
         // paletteName = hexPalettes[index].name;
 
+        const mothersDayPalette: HexPalette | undefined = Random.randomElement(buildMothersDayPalettes());
+        console.log(mothersDayPalette);
+        // selector = new HexColorSelector(true, mothersDayPalette?.colors ?? ['#000000', '#FFFFFF']);
+
+        const pridePalette: HexPalette | undefined = Random.randomElement(buildPridePalettes());
+        console.log(pridePalette);
+        selector = new HexColorSelector(true, pridePalette?.colors ?? ['#000000', '#FFFFFF']);
+
         // console.log(paletteName);
         LINE_DENSITY_SELECTOR.setRandomCategory();
 
         const lineFill: LineFill = Random.randomElement([LineFill.EVEN_OVERLAP, LineFill.RANDOM_OVERLAP]) ?? LineFill.EVEN_OVERLAP;
         const lineTrend: LineTrend = Random.randomElement(Object.values(LineTrend)) ?? LineTrend.CONSTANT;
-        // console.log(lineTrend);
+        console.log(lineTrend);
+
+        // July 4th config start
+        // LINE_DENSITY_SELECTOR.currentCategory = LineDensity.LOW_MEDIUM;
 
         const config: LinesConfig = {
             NAME: 'Falling Lines',
@@ -200,13 +237,17 @@ function sketch(p5: P5Lib): void {
             LINE_TREND_CATEGORY: lineTrend,
             // LINE_TREND_CATEGORY: LineTrend.CONSTANT,
             COLOR_SELECTOR: selector,
-            LINE_LENGTH_CATEGORY: Random.randomElement([LineLength.FULL_SCREEN, LineLength.MEDIUM_LONG, LineLength.LONG, LineLength.FULL_SCREEN_ONLY, LineLength.MIXED]) ?? LineLength.FULL_SCREEN,
+            // LINE_LENGTH_CATEGORY: Random.randomElement([LineLength.FULL_SCREEN, LineLength.MEDIUM_LONG, LineLength.LONG, LineLength.FULL_SCREEN_ONLY, LineLength.MIXED]) ?? LineLength.FULL_SCREEN,
             // LINE_LENGTH_CATEGORY: LineLength.LONG,
             // THICKNESS_CATEGORY: LineThickness.MIXED,
+            // THICKNESS_CATEGORY: Random.randomElement([LineThickness.MEDIUM, LineThickness.MEDIUM_THICK, LineThickness.THICK]) ?? LineThickness.THICK,
             // GRADIENT_RENDER: Random.randomElement(Object.values(LineRenderMode)),
-            LINE_TRANSPARENCY_CATEGORY: Random.randomElement([LineTransparency.SOLID, LineTransparency.LOW_TRANSPARENCY]) ?? LineTransparency.SOLID
+            // GRADIENT_RENDER: LineRenderMode.VERTICES,
+            // LINE_TRANSPARENCY_CATEGORY: Random.randomElement([LineTransparency.SOLID, LineTransparency.LOW_TRANSPARENCY]) ?? LineTransparency.SOLID
             // GRADIENT_TYPE: LineGradient.RANDOM_WINDOW_GRADIENT,
             // EVEN_GRADIENT: true
+            // GRADIENT_TYPE: LineGradient.SOLID,
+            // LINE_TRANSPARENCY_CATEGORY: LineTransparency.LOW_TRANSPARENCY
         };
 
         const fallingLines: CanvasScreen = new FallingLines(config);
