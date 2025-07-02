@@ -101,8 +101,6 @@ function sketch(p5: P5Lib): void {
             { name: 'costa rican daze', colors: ['#000000', '#444444', '#FFFBFC', '#AC206A', '#3C91E6'] },
             { name: 'garden shadow', colors: ['#000000', '#444444', '#71B340', '#AC206A', '#3C91E6'] },
             { name: 'sunset shadow', colors: ['#000000', '#444444', '#D17A22', '#AC206A', '#3C91E6'] },
-            { name: 'deathkiss', colors: ['#000000', '#444444', '#5F5F5F', '#797979', '#AC206A'] },
-            { name: 'goth babe', colors: ['#4b5d67', '#1a2626', '#170114', '#331134', '#464057'] },
             { name: 'bring on the neon', colors: ['#ff00a9', '#8000ff', '#f0ff07', '#a5ff0b', '#00ddff'] },
             { name: 'beach belladonna', colors: ['#94dfca', '#435f54', '#120a0a', '#230717', '#260606'] },
             { name: 'ninja ocean', colors: ['#785995', '#4f2597', '#352672', '#1c2d4a', '#073224', '#122a1b'] },
@@ -133,13 +131,13 @@ function sketch(p5: P5Lib): void {
 
     function buildJulyPalettes(): HexPalette[] {
         return [
-            // { name: 'independence day', colors: ['#E63946', '#F1FAEE', '#A8DADC', '#457B9D', '#1D3557'] },
-            // { name: 'option-1', colors: ['#BB1212', '#DD7F7F', '#EEEEEE', '#537DA3', '#0E5493'] },
-            // { name: 'option-2', colors: ['#FF0000', '#FF8484', '#FFFFFF', '#81FCFF', '#00D2FF'] },
-            // { name: 'option-3', colors: ['#FF0000', '#FFFFFF', '#0900FF'] },
-            // { name: 'option-4', colors: ['#FF0000', '#FFFFFF', '#4B7BFF'] },
-            // { name: 'option-5', colors: ['#511F1F', '#5E2F2F', '#DDDCDC', '#36426D', '#2E225C'] },
-            // { name: 'option-6', colors: ['#FFFFFF', '#FFD8D8', '#FFA6A6', '#B7CEFF', '#D0F2FF'] },
+            { name: 'independence day', colors: ['#E63946', '#F1FAEE', '#A8DADC', '#457B9D', '#1D3557'] },
+            { name: 'option-1', colors: ['#BB1212', '#DD7F7F', '#EEEEEE', '#537DA3', '#0E5493'] },
+            { name: 'option-2', colors: ['#FF0000', '#FF8484', '#FFFFFF', '#81FCFF', '#00D2FF'] },
+            { name: 'option-3', colors: ['#FF0000', '#FFFFFF', '#0900FF'] },
+            { name: 'option-4', colors: ['#FF0000', '#FFFFFF', '#4B7BFF'] },
+            { name: 'option-5', colors: ['#511F1F', '#5E2F2F', '#DDDCDC', '#36426D', '#2E225C'] },
+            { name: 'option-6', colors: ['#FFFFFF', '#FFD8D8', '#FFA6A6', '#B7CEFF', '#D0F2FF'] },
             { name: 'american flag', colors: ['#B31942', '#0A3161'] }
         ];
     }
@@ -172,6 +170,29 @@ function sketch(p5: P5Lib): void {
             { name: 'bisexual pride flag', colors: ['#D60270', '#9B4F96', '#0038A8'] },
             { name: 'transgender pride flag', colors: ['#5BCEFA', '#F5A9B8', '#FFFFFF'] },
             { name: 'nonbinary pride flag', colors: ['#FCF434', '#FFFFFF', '#9C59D1', '#2C2C2C'] }
+        ];
+    }
+
+    function buildHalloweenPalettes(): HexPalette[] {
+        return [
+            { name: 'mindful palette, no. 86', colors: ['#F5E9CE', '#432E6F', '#FFA102', '#DD5533', '#BC2D29', '#450E15'] },
+            { name: 'pastel halloween', colors: ['#FEB1CD', '#000000', '#886EF6', '#BDEF80', '#205E2D'] },
+            { name: 'purple pumpkin', colors: ['#2E073F' , '#7A1CAC', '#AD49E1', '#EBD3F8'] },
+            { name: 'goth dress', colors: ['#EAEAEA', '#893168', '#4A1942', '#2E1C2B', '#050404'] },
+            { name: 'the shades of halloween', colors: ['#FF7100', '#FD9702', '#E102FF', '#AE03FF', '#000000'] },
+            { name: 'halloween color', colors: ['#2BD011', '#8929BF', '#FD7708', '#FDE500', '#000000'] },
+            { name: 'halloween colors 234', colors: ['#000000', '#ff6c00', '#9700f8', '#1dff00', '#000000'] },
+            { name: 'halloween scare', colors: ['#000000', '#D04000', '#EB7800', '#7200A5', '#1C9A00'] },
+            { name: 'halloween presentation', colors: ['#FF7518', '#855294', '#721F92', '#3D0d52', '#1D002D'] },
+            { name: 'toxic halloween candy', colors: ['#3C3C3C', '#A5FFA7', '#FFBB75', '#E0B6FF', '#FF8BBE'] },
+            { name: 'halloween punk', colors: ['#EA7C4C', '#94F66D', '#56D465', '#845DC1', '#6834AB'] },
+            { name: 'ugly halloween', colors: ['#B65919', '#000000', '#286849', '#570E3B', '#67503A'] },
+            { name: 'classic halloween', colors: ['#562c74', '#b45b00', '#000000', '#dddddd', '#234b1a'] },
+            { name: 'plastic halloween', colors: ['#483D6D', '#9965BD', '#CAEC6C', '#69AE4E', '#F08831'] },
+            { name: 'halloween muse', colors: ['#010101', '#1D002D', '#3D0D52', '#721F92', '#DD69D9'] },
+            { name: 'witchy halloween', colors: ['#1F1D4B', '#382F50', '#5E2B66', '#A17539', '#978A60'] },
+            { name: 'deathkiss', colors: ['#000000', '#444444', '#5F5F5F', '#797979', '#AC206A'] },
+             { name: 'goth babe', colors: ['#4B5D67', '#1A2626', '#170114', '#331134', '#464057'] }
         ];
     }
 
