@@ -158,7 +158,7 @@ function sketch(p5: P5Lib): void {
             { name: 'gradient haiku, no. 37', colors: ['#F3FCE1', '#BDF7EF', '#B9DCF2', '#D6C8EE', '#F8C6DB'] },
             { name: 'sorbet', colors: ['#FFC1CF', '#E8FFB7', '#E2A0FF', '#C4F5FC', '#B7FFD8'] },
             { name: 'lilac violet', colors: ['#531CB3', '#944BBB', '#AA7BC3', '#CC92C2'] }
-        ]
+        ];
     }
 
     function buildPridePalettes(): HexPalette[] {
@@ -177,7 +177,7 @@ function sketch(p5: P5Lib): void {
         return [
             { name: 'mindful palette, no. 86', colors: ['#F5E9CE', '#432E6F', '#FFA102', '#DD5533', '#BC2D29', '#450E15'] },
             { name: 'pastel halloween', colors: ['#FEB1CD', '#000000', '#886EF6', '#BDEF80', '#205E2D'] },
-            { name: 'purple pumpkin', colors: ['#2E073F' , '#7A1CAC', '#AD49E1', '#EBD3F8'] },
+            { name: 'purple pumpkin', colors: ['#2E073F', '#7A1CAC', '#AD49E1', '#EBD3F8'] },
             { name: 'goth dress', colors: ['#EAEAEA', '#893168', '#4A1942', '#2E1C2B', '#050404'] },
             { name: 'the shades of halloween', colors: ['#FF7100', '#FD9702', '#E102FF', '#AE03FF', '#000000'] },
             { name: 'halloween color', colors: ['#2BD011', '#8929BF', '#FD7708', '#FDE500', '#000000'] },
@@ -192,7 +192,7 @@ function sketch(p5: P5Lib): void {
             { name: 'halloween muse', colors: ['#010101', '#1D002D', '#3D0D52', '#721F92', '#DD69D9'] },
             { name: 'witchy halloween', colors: ['#1F1D4B', '#382F50', '#5E2B66', '#A17539', '#978A60'] },
             { name: 'deathkiss', colors: ['#000000', '#444444', '#5F5F5F', '#797979', '#AC206A'] },
-             { name: 'goth babe', colors: ['#4B5D67', '#1A2626', '#170114', '#331134', '#464057'] }
+            { name: 'goth babe', colors: ['#4B5D67', '#1A2626', '#170114', '#331134', '#464057'] }
         ];
     }
 
@@ -207,6 +207,7 @@ function sketch(p5: P5Lib): void {
 
         if (Random.randomBoolean() && hexPalette) {
             selector = new HexColorSelector(true, hexPalette.colors);
+            console.log(selector);
             // paletteName = hexPalette.name;
         } else {
             const palettes: Palette[] = Array.from(ALL_PALETTES.values);
@@ -216,6 +217,7 @@ function sketch(p5: P5Lib): void {
             const selectorManager: ColorSelectorManager = new ColorSelectorManager();
             selectorManager.addColorSelectors(selectors);
             selector = selectorManager.getRandomColorSelector();
+            console.log(selector);
             // paletteName = selector.name;
         }
 
@@ -237,7 +239,11 @@ function sketch(p5: P5Lib): void {
 
         const pridePalette: HexPalette | undefined = Random.randomElement(buildPridePalettes());
         console.log(pridePalette);
-        selector = new HexColorSelector(true, pridePalette?.colors ?? ['#000000', '#FFFFFF']);
+        // selector = new HexColorSelector(true, pridePalette?.colors ?? ['#000000', '#FFFFFF']);
+
+        const halloweenPalette: HexPalette | undefined = Random.randomElement(buildHalloweenPalettes());
+        console.log(halloweenPalette);
+        selector = new HexColorSelector(true, halloweenPalette?.colors ?? ['#000000', '#FFFFFF']);
 
         // console.log(paletteName);
         LINE_DENSITY_SELECTOR.setRandomCategory();
@@ -257,7 +263,7 @@ function sketch(p5: P5Lib): void {
             // LINE_FILL_CATEGORY: LineFill.RANDOM_OVERLAP,
             LINE_TREND_CATEGORY: lineTrend,
             // LINE_TREND_CATEGORY: LineTrend.CONSTANT,
-            COLOR_SELECTOR: selector,
+            COLOR_SELECTOR: selector
             // LINE_LENGTH_CATEGORY: Random.randomElement([LineLength.FULL_SCREEN, LineLength.MEDIUM_LONG, LineLength.LONG, LineLength.FULL_SCREEN_ONLY, LineLength.MIXED]) ?? LineLength.FULL_SCREEN,
             // LINE_LENGTH_CATEGORY: LineLength.LONG,
             // THICKNESS_CATEGORY: LineThickness.MIXED,

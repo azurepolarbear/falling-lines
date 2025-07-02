@@ -153,7 +153,7 @@ export class FallingLines extends CanvasScreen {
         this.#LINE_ALIGNMENT = config.LINE_ALIGNMENT ?? LineAlignment.TOP;
         console.log(this.#LINE_ALIGNMENT);
 
-        this.#background = this.#COLOR_SELECTOR.getBackgroundColor(0.3, 0.7, 0);
+        this.#background = this.#COLOR_SELECTOR.getBackgroundColor(0.4, 0.3, 0.3);
 
         this.#initializeLineThicknessSelector(config.THICKNESS_CATEGORY, config.SAME_THICKNESS);
         this.#initializeLineLengthSelector(config.LINE_LENGTH_CATEGORY, config.SAME_LENGTH);
